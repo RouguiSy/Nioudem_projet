@@ -1,16 +1,9 @@
-/* ══════════════════════════════════════════════════════
-   NIOUDEEM — style.css
-   Palette : #111827 · #FACC15 · #FFFFFF
-   ══════════════════════════════════════════════════════ */
-
-/* ─── Reset ─────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body { font-family: "Segoe UI", system-ui, sans-serif; min-height: 100vh; transition: background .3s, color .3s; }
 a { text-decoration: none; }
 img { display: block; }
 
-/* ─── CSS Variables ──────────────────────────────────── */
 :root {
   --yellow:       #FACC15;
   --bg:           #F8FAFC;
@@ -35,22 +28,17 @@ html.dark {
   --txt-faint:    rgba(255,255,255,.28);
 }
 
-/* ─── Transition page ────────────────────────────────── */
 #app { animation: fadeIn .22s ease; }
 @keyframes fadeIn { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:none } }
 
-/* ══════════════════════════════════════════════════════
-   COMPOSANTS PARTAGÉS
-   ══════════════════════════════════════════════════════ */
 
-/* Logo */
 .logo { display:flex; align-items:center; gap:10px; }
 .logo-icon { width:36px; height:36px; border-radius:9px; background:var(--yellow); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 .logo-icon--sm { width:30px; height:30px; border-radius:7px; }
 .logo-text { font-size:20px; font-weight:800; letter-spacing:-.5px; color:var(--txt-main); line-height:1; }
 .logo-text--sm { font-size:16px; }
 
-/* Gradient text */
+
 .gradient-text {
   background: linear-gradient(135deg,#FACC15 0%,#F59E0B 100%);
   -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;

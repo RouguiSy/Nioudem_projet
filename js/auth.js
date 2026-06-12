@@ -1,4 +1,3 @@
-// js/auth.js
 import { findUser, addUser } from './db.js';
 import { setSession, getSession, clearSession } from './session.js';
 import { navigate } from './router.js';
@@ -6,7 +5,7 @@ import { showToast } from './toast.js';
 
 let _currentRole = 'client';
 
-// ========== CONNEXION ==========
+
 export function initConnexion() {
   document.getElementById('btn-admin')?.addEventListener('click', () => showForm('admin'));
   document.getElementById('btn-client')?.addEventListener('click', () => showForm('client'));
@@ -150,7 +149,7 @@ export function initDashboard() {
     }
   }
 
-  // Date
+
   const dateEl = document.getElementById('db-date');
   if (dateEl) {
     dateEl.textContent = new Date().toLocaleDateString('fr-FR', {
@@ -158,7 +157,7 @@ export function initDashboard() {
     });
   }
 
-  // Avatar et nom
+
   const session = getSession();
   if (session) {
     const initiales = session.nom.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();

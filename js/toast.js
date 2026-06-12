@@ -1,4 +1,3 @@
-// js/toast.js
 export function showToast(message) {
     const existing = document.getElementById('nd-toast');
     if (existing) existing.remove();

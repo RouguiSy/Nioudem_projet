@@ -1,4 +1,3 @@
-// ─── router.js ───────────────────────────────────────────
 import { accueilPage }     from './pages/accueil_page.js';
 import { connexionPage }   from './pages/connexion_page.js';
 import { inscriptionPage } from './pages/inscription_page.js';
@@ -45,22 +44,20 @@ export async function render() {
     window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
-async function initPage(route) {   // ← async ajouté
+async function initPage(route) {   
     syncThemeIcons();
 
     document.querySelectorAll('[data-theme-toggle], #login-theme-btn, #insc-theme-btn, #db-theme-btn').forEach(btn => {
         btn.onclick = (e) => { e.preventDefault(); toggleTheme(); };
     });
 
-    if (route === 'connexion')   await initConnexionPage();   // ← await
-    if (route === 'inscription') await initInscriptionPage(); // ← await
-    if (route === 'dashboard')   await initDashboardPage();   // ← await
+    if (route === 'connexion')   await initConnexionPage();   
+    if (route === 'inscription') await initInscriptionPage(); 
+    if (route === 'dashboard')   await initDashboardPage();   
 }
 
-// ─────────────────────────────────────────────────────────
-// PAGE CONNEXION
-// ─────────────────────────────────────────────────────────
-async function initConnexionPage() {   // ← async
+
+async function initConnexionPage() {   
     let currentRole = 'client';
 
     const adminBtn  = document.getElementById('btn-admin');
@@ -101,18 +98,17 @@ async function initConnexionPage() {   // ← async
         if (err)        err.style.display        = 'none';
     }
 
-    async function handleSubmit(event) {   // ← async
+    async function handleSubmit(event) {   
         event.preventDefault();
 
         const email = document.getElementById('login-email')?.value.trim() || '';
         const pwd   = document.getElementById('login-pwd')?.value || '';
         const err   = document.getElementById('login-error');
 
-        // Désactiver le bouton pendant la requête
         const btn = event.target.querySelector('button[type="submit"]');
         if (btn) { btn.disabled = true; btn.textContent = 'Connexion…'; }
 
-        const user = await findUser(email);   // ← await
+        const user = await findUser(email);   
 
         if (btn) { btn.disabled = false; btn.textContent = 'Se connecter →'; }
 
@@ -140,10 +136,8 @@ async function initConnexionPage() {   // ← async
     if (loginForm) loginForm.onsubmit = handleSubmit;
 }
 
-// ─────────────────────────────────────────────────────────
-// PAGE INSCRIPTION
-// ─────────────────────────────────────────────────────────
-async function initInscriptionPage() {   // ← async
+
+async function initInscriptionPage() {   
     const pwdInput  = document.getElementById('insc-pwd');
     const pwd2Input = document.getElementById('insc-pwd2');
     const inscForm  = document.getElementById('insc-form');
@@ -163,7 +157,7 @@ async function initInscriptionPage() {   // ← async
         }
     }
 
-    async function handleSubmit(event) {   // ← async
+    async function handleSubmit(event) {   
         event.preventDefault();
 
         const nom   = document.getElementById('insc-nom')?.value.trim()   || '';
@@ -173,7 +167,7 @@ async function initInscriptionPage() {   // ← async
         const pwd2  = pwd2Input?.value ?? '';
         const err   = document.getElementById('insc-error');
 
-        // Validations synchrones
+
         if (pwd !== pwd2) {
             if (err) { err.textContent = 'Les mots de passe ne correspondent pas'; err.style.display = 'block'; }
             return;
@@ -183,11 +177,11 @@ async function initInscriptionPage() {   // ← async
             return;
         }
 
-        // Désactiver le bouton pendant la requête
+
         const btn = event.target.querySelector('button[type="submit"]');
         if (btn) { btn.disabled = true; btn.textContent = 'Vérification…'; }
 
-        const existing = await findUser(email);   // ← await
+        const existing = await findUser(email);   
 
         if (existing) {
             if (btn) { btn.disabled = false; btn.textContent = 'Créer mon compte →'; }
@@ -205,7 +199,7 @@ async function initInscriptionPage() {   // ← async
 
         if (btn) btn.textContent = 'Création…';
 
-        await addUser(newUser);   // ← await → écrit dans users.json
+        await addUser(newUser);   
 
         setSession(newUser);
         showToast(`Bienvenue ${nom.split(' ')[0]} ! 🎉`);
@@ -219,10 +213,8 @@ async function initInscriptionPage() {   // ← async
     if (inscForm) inscForm.onsubmit = handleSubmit;
 }
 
-// ─────────────────────────────────────────────────────────
-// PAGE DASHBOARD
-// ─────────────────────────────────────────────────────────
-async function initDashboardPage() {   // ← async
+
+async function initDashboardPage() {   
     const logoutBtn = document.getElementById('db-logout-btn');
     const dateEl    = document.getElementById('db-date');
     const session   = getSession();
@@ -241,7 +233,6 @@ async function initDashboardPage() {   // ← async
         if (nameEl)   nameEl.textContent   = session.nom;
     }
 
-    // ← await ajouté : récupère les vrais clients depuis json-server
     const users   = await getUsers();
     const clients = users.filter(u => u.role === 'client');
     const tbody   = document.getElementById('db-clients-body');
@@ -275,9 +266,6 @@ async function initDashboardPage() {   // ← async
     }
 }
 
-// ─────────────────────────────────────────────────────────
-// NAVBAR
-// ─────────────────────────────────────────────────────────
 function updateNavbar() {
     const session      = getSession();
     const connexionBtn = document.getElementById('nav-connexion');
@@ -299,9 +287,7 @@ function updateNavbar() {
     }
 }
 
-// ─────────────────────────────────────────────────────────
-// INIT
-// ─────────────────────────────────────────────────────────
+
 export function initRouter() {
     window.addEventListener('hashchange', render);
     render();

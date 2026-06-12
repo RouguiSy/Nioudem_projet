@@ -1,4 +1,3 @@
-// js/theme.js
 export function syncThemeIcons() {
     const isDark = document.documentElement.classList.contains('dark');
     document.querySelectorAll('.theme-icon').forEach(el => {

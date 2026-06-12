@@ -1,7 +1,3 @@
-// ─── db.js ───────────────────────────────────────────────
-// Toutes les données passent par json-server
-// ─────────────────────────────────────────────────────────
-
 const API = 'http://127.0.0.1:3000/users';
 
 export async function initDB() {}

@@ -1,4 +1,3 @@
-// js/session.js
 const SESSION_KEY = "nioudeem_session";
 
 export function getSession() {
