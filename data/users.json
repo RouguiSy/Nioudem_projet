@@ -1,0 +1,23 @@
+{
+  "users": [
+    {
+      "id": "ADM-001",
+      "nom": "Abdou Diallo",
+      "email": "admin@nioudeem.com",
+      "telephone": "+221 77 000 0000",
+      "password": "admin123",
+      "role": "admin",
+      "createdAt": "2025-01-01"
+    },
+    {
+      "id": "NoWUOCYYd3E",
+      "nom": "kiki odc",
+      "email": "kiki@nioudeem.com",
+      "telephone": "773438165",
+      "password": "passer123",
+      "role": "client",
+      "createdAt": "2026-06-12"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
