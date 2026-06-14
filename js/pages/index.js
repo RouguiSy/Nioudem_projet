@@ -1,14 +1,20 @@
-export { accueilPage } from './accueil_page.js';
-export { connexionPage } from './connexion_page.js';
-export { inscriptionPage } from './inscription_page.js';
-export { dashboardPage } from './dashboard_page.js';
+import { initTheme, toggleTheme } from './theme.js';
+import { loadDB } from './db.js';
+import { initRouter, navigate } from './router.js';
+import { clearSession } from './session.js';
+import { showToast } from './toast.js';
+import { logout } from './auth.js';
 
-export function getPage(pageName) {
-        pages = {
-        'accueil': accueilPage,
-        'connexion': connexionPage,
-        'inscription': inscriptionPage,
-        'dashboard': dashboardPage
-    };
-    return pages[pageName] || pages['accueil'];
+window.NiouDeem = {
+    navigate: (route) => navigate(route),
+    toggleTheme: () => toggleTheme(),
+    logout: () => logout(),
+};
+
+async function main() {
+    initTheme();
+    await loadDB();
+    initRouter();
 }
+
+main();

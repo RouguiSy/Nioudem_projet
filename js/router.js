@@ -2,6 +2,7 @@ import { accueilPage }     from './pages/accueil_page.js';
 import { connexionPage }   from './pages/connexion_page.js';
 import { inscriptionPage } from './pages/inscription_page.js';
 import { dashboardPage }   from './pages/dashboard_page.js';
+import { flottePage } from './pages/flotte.js';
 import { getSession, setSession, clearSession } from './session.js';
 import { syncThemeIcons, toggleTheme }          from './theme.js';
 import { showToast }                            from './toast.js';
@@ -11,7 +12,8 @@ const PAGES = {
     'accueil'     : accueilPage,
     'connexion'   : connexionPage,
     'inscription' : inscriptionPage,
-    'dashboard'   : dashboardPage
+    'dashboard'   : dashboardPage,
+    'flotte'      : flottePage
 };
 
 function getHash() {
@@ -280,9 +282,17 @@ function updateNavbar() {
             const userInitials = document.getElementById('nav-user-initials');
             if (userName)     userName.textContent     = session.nom?.split(' ')[0] || 'Compte';
             if (userInitials) userInitials.textContent = initials;
+
+            userPill.style.cursor = 'pointer';
+            userPill.onclick = () => {
+                clearSession();
+                showToast('Déconnexion réussie');
+                setTimeout(() => render(), 800); 
+            };
         } else {
             connexionBtn.style.display = 'inline-flex';
             userPill.style.display     = 'none';
+            userPill.onclick           = null;
         }
     }
 }

@@ -2,9 +2,9 @@
   "users": [
     {
       "id": "ADM-001",
-      "nom": "Abdou Diallo",
+      "nom": "Rougui Sy",
       "email": "admin@nioudeem.com",
-      "telephone": "+221 77 000 0000",
+      "telephone": "+221 77 343 81 65",
       "password": "admin123",
       "role": "admin",
       "createdAt": "2025-01-01"
@@ -14,6 +14,15 @@
       "nom": "kiki odc",
       "email": "kiki@nioudeem.com",
       "telephone": "773438165",
+      "password": "passer123",
+      "role": "client",
+      "createdAt": "2026-06-12"
+    },
+    {
+      "id": "Qz0Du7RAYt0",
+      "nom": "momo odc",
+      "email": "momo@nioudeem.com",
+      "telephone": "27789900",
       "password": "passer123",
       "role": "client",
       "createdAt": "2026-06-12"

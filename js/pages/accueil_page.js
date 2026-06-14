@@ -21,7 +21,7 @@ export const accueilPage = `
   <div class="nav-actions">
     <button class="theme-btn" data-theme-toggle><span class="theme-icon">☀️</span></button>
     <a id="nav-connexion" href="#connexion" class="btn-outline">Connexion</a>
-    <div id="nav-user" class="nav-user-pill" style="display:none" data-dashboard-link>
+    <div id="nav-user" class="nav-user-pill" style="display:none">
       <div class="nav-user-avatar" id="nav-user-initials">?</div>
       <span class="nav-user-name" id="nav-user-name">Compte</span>
     </div>
