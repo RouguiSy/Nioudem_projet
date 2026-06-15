@@ -52,7 +52,7 @@ export const flottePage = `
       <div class="car-status disponible">DISPONIBLE</div>
       <div class="car-scene">
         <div class="car-3d">
-           <img src="js/assets/images/Mercedes.png" alt="oups">
+          <img src="js/assets/images/Mercedes.png" alt="oups">
         </div>
       </div>
       <div class="car-info">
@@ -251,26 +251,5 @@ export const flottePage = `
   </div>
 
 </div>
-
-<script>
-(function() {
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const cards = document.querySelectorAll('.car-card');
-
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const filter = btn.dataset.filter;
-      cards.forEach(card => {
-        if (filter === 'tous' || card.dataset.categorie === filter) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    });
-  });
-})();
-</script>
 `;
+
