@@ -1,5 +1,6 @@
-export const accueilPage = `
-<nav class="navbar">
+export const accueilPage =
+     `
+       <nav class="navbar">
   <a href="#accueil" class="logo">
     <div class="logo-icon">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -163,4 +164,5 @@ export const accueilPage = `
   <div class="footer-loc">Dakar, Sénégal</div>
 </footer>
 `;
+
 

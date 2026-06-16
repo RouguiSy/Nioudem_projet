@@ -1,12 +1,12 @@
-import { accueilPage } from "./pages/accueil_page.js";
-import { connexionPage } from "./pages/connexion_page.js";
-import { inscriptionPage } from "./pages/inscription_page.js";
-import { dashboardPage } from "./pages/dashboard_page.js";
-import { flottePage } from "./pages/flotte_page.js";
-import { reservationPage } from "./pages/reservation_page.js";
-import { cartePage } from "./pages/carte_page.js";
-import { tarifsPage } from "./pages/tarifs_page.js";
-import { aproposPage } from "./pages/apropos_page.js";
+import { accueilPage } from "./pages/accueil/accueil.js";
+import { connexionPage } from "./pages/connexion/connexion.js";
+import { inscriptionPage } from "./pages/inscription/inscription.js";
+import { dashboardPage } from "./pages/dashboard/dashboard.js";
+import { flottePage } from "./pages/flotte/flotte.js";
+import { reservationPage } from "./pages/reservation/reservation.js";
+import { cartePage } from "./pages/carte/carte.js";
+import { tarifsPage } from "./pages/tarifs/tarifs.js";
+import { aproposPage } from "./pages/apropos/apropos.js";
 import { getSession, setSession, clearSession } from "./session.js";
 import { syncThemeIcons, toggleTheme } from "./theme.js";
 import { showToast } from "./toast.js";
@@ -46,13 +46,13 @@ export async function render() {
     if (hash === 'dashboard' && session?.role !== 'admin') {
         navigate('accueil'); return;
     }
- 
+
     if (hash === 'reservation' && !session) {
         showToast('Connectez-vous pour réserver');
         navigate('connexion');
         return;
     }
- 
+
     app.innerHTML = PAGES[hash] || PAGES['accueil'];
     await initPage(hash);
     updateNavbar();
@@ -1249,4 +1249,5 @@ async function loadReservations() {
 export function initRouter() {
   window.addEventListener("hashchange", render);
   render();
+
 }

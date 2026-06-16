@@ -3,6 +3,7 @@ import { initRouter, navigate }   from './router.js';
 import { clearSession }           from './session.js';
 import { showToast }              from './toast.js';
 
+
 const appApi = {
     navigate,
     toggleTheme,
