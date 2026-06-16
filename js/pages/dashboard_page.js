@@ -78,23 +78,23 @@ export const dashboardPage = `
       <!-- KPIs — toujours visibles -->
       <div class="db-kpis">
         <div class="db-kpi">
-          <div class="db-kpi-top"><span class="db-kpi-icon">📋</span><span class="db-kpi-delta badge badge-green">+4</span></div>
-          <div class="db-kpi-val" style="color:#FACC15">23</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 512 512"><path d="M0 0h512v512H0z" fill="none"/><path fill="#FACC15" d="M131.3 20.35c-14.6.1-28.1 10-31.93 24.82c-2.33 9.13-.55 18.4 4.13 25.84c-7.67 4.26-13.69 11.53-16.03 20.66c-2.32 9.13-.56 18.33 4.1 25.83a32.7 32.7 0 0 0-15.96 20.6c-2.34 9.1-.54 18.4 4.18 25.8c-7.72 4.3-13.75 11.5-16.09 20.7c-2.33 9.1-.54 18.4 4.19 25.8c-7.72 4.3-13.75 11.5-16.09 20.7c-2.34 9.1-.54 18.4 4.18 25.8c-7.72 4.3-13.75 11.5-16.08 20.7c-2.34 9.1-.54 18.4 4.18 25.8c-7.72 4.3-13.75 11.5-16.09 20.7c-2.35 9.2-.51 18.5 4.3 26a32.92 32.92 0 0 0-16.28 20.8c-4.48 17.5 6.25 35.6 23.79 40.1l.1-.2l31.71 8.2l-1.47 5.7l261.56 67L374 326.5l-22.4 21.2l-87.8 26.5l15.5-42.5l-151.7-38.8l4.4-17.4l153.5 39.3l9.7-26.7l15.3-14.4l-167-42.8l4.4-17.4l178 45.6l39.6-37.4l-206.1-52.8l4.4-17.4L380.7 207l-.1.4l31.5-29.8l18.3-71.4l-261.6-67.04z"/></svg>
+          <div class="db-kpi-val" id="kpi-active-res" style="color:#FACC15">—</div>
           <div class="db-kpi-lbl">Réservations actives</div>
         </div>
         <div class="db-kpi">
-          <div class="db-kpi-top"><span class="db-kpi-icon">🚗</span><span class="db-kpi-delta badge badge-green">36%</span></div>
-          <div class="db-kpi-val" style="color:#22C55E">18/50</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path fill="#FACC15" d="M14 5a1 1 0 0 1 .694.28l.087.095L18.48 10H19a3 3 0 0 1 2.995 2.824L22 13v4a1 1 0 0 1-1 1h-1.171a3.001 3.001 0 0 1-5.658 0H9.829a3.001 3.001 0 0 1-5.658 0H3a1 1 0 0 1-1-1v-6l.007-.117l.008-.056l.017-.078l.012-.036l.014-.05l2.014-5.034A1 1 0 0 1 5 5zM7 16a1 1 0 1 0 0 2a1 1 0 0 0 0-2m10 0a1 1 0 1 0 0 2a1 1 0 0 0 0-2m-6-9H5.676l-1.2 3H11zm2.52 0H13v3h2.92z"/></svg>
+          <div class="db-kpi-val" id="kpi-vehicles" style="color:#22C55E">—</div>
           <div class="db-kpi-lbl">Véhicules en service</div>
         </div>
         <div class="db-kpi">
           <div class="db-kpi-top"><span class="db-kpi-icon">💰</span><span class="db-kpi-delta badge badge-blue">+12%</span></div>
-          <div class="db-kpi-val" style="color:#818CF8">2.8M</div>
+          <div class="db-kpi-val" id="kpi-revenue" style="color:#818CF8">—</div>
           <div class="db-kpi-lbl">Revenus du jour (FCFA)</div>
         </div>
         <div class="db-kpi">
           <div class="db-kpi-top"><span class="db-kpi-icon">⚠️</span><span class="db-kpi-delta badge badge-red">−1</span></div>
-          <div class="db-kpi-val" style="color:#FB923C">3</div>
+          <div class="db-kpi-val" id="kpi-incidents" style="color:#FB923C">—</div>
           <div class="db-kpi-lbl">Incidents ouverts</div>
         </div>
       </div>
@@ -109,12 +109,8 @@ export const dashboardPage = `
           <div style="overflow-x:auto">
             <table class="db-table">
               <thead><tr><th>ID</th><th>Client</th><th>Chauffeur</th><th>Voiture</th><th>Trajet</th><th>Durée</th><th>Statut</th><th>Montant</th></tr></thead>
-              <tbody>
-                <tr><td class="yellow">RES-001</td><td>Amadou Diallo</td><td class="muted">Ibrahima Sow</td><td class="muted">Mercedes S</td><td><div>Dakar - Plateau</div><div class="muted" style="font-size:11px">→ Aéroport LSS</div></td><td class="muted">09:00 – 10:30</td><td><span class="badge badge-green">En cours</span></td><td style="font-weight:700">45 000 F</td></tr>
-                <tr><td class="yellow">RES-002</td><td>Fatou Ndiaye</td><td class="muted">Moussa Ba</td><td class="muted">Toyota LC</td><td><div>Almadies</div><div class="muted" style="font-size:11px">→ Thiès</div></td><td class="muted">07:00 – 10:00</td><td><span class="badge badge-gray">Terminé</span></td><td style="font-weight:700">120 000 F</td></tr>
-                <tr><td class="yellow">RES-003</td><td>Oumar Sarr</td><td class="muted">Seydou Diouf</td><td class="muted">BMW Série 7</td><td><div>Mermoz</div><div class="muted" style="font-size:11px">→ Saly</div></td><td class="muted">14:00 – 17:30</td><td><span class="badge badge-yellow">Planifié</span></td><td style="font-weight:700">180 000 F</td></tr>
-                <tr><td class="yellow">RES-004</td><td>Aïssatou Fall</td><td class="muted">Cheikh Kane</td><td class="muted">Hyundai Staria</td><td><div>Point E</div><div class="muted" style="font-size:11px">→ Saint-Louis</div></td><td class="muted">06:00 – 14:00</td><td><span class="badge badge-yellow">Planifié</span></td><td style="font-weight:700">320 000 F</td></tr>
-                <tr><td class="yellow">RES-005</td><td>Mamadou Touré</td><td class="muted">Aliou Mbaye</td><td class="muted">Peugeot 508</td><td><div>Sacré-Cœur</div><div class="muted" style="font-size:11px">→ Dakar Port</div></td><td class="muted">11:00 – 12:00</td><td><span class="badge badge-red">Annulé</span></td><td style="font-weight:700">30 000 F</td></tr>
+              <tbody id="db-res-body-home">
+                <tr><td colspan="8" class="muted" style="text-align:center;padding:24px">Chargement…</td></tr>
               </tbody>
             </table>
           </div>
@@ -122,7 +118,11 @@ export const dashboardPage = `
 
         <div class="db-card">
           <div class="db-card-header">
-            <span class="db-card-title">👥 Clients inscrits</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
+	<path d="M0 0h24v24H0z" fill="none" />
+	<path fill="#facc15" d="M16 17v2H2v-2s0-4 7-4s7 4 7 4m-3.5-9.5A3.5 3.5 0 1 0 9 11a3.5 3.5 0 0 0 3.5-3.5m3.44 5.5A5.32 5.32 0 0 1 18 17v2h4v-2s0-3.63-6.06-4M15 4a3.4 3.4 0 0 0-1.93.59a5 5 0 0 1 0 5.82A3.4 3.4 0 0 0 15 11a3.5 3.5 0 0 0 0-7" />
+</svg>
+
             <span class="badge badge-blue" id="db-client-count">— comptes</span>
           </div>
           <div style="overflow-x:auto">
@@ -136,20 +136,9 @@ export const dashboardPage = `
         <div class="db-card">
           <div class="db-card-header">
             <span class="db-card-title">⚠️ Incidents récents</span>
-            <button class="btn-outline" style="font-size:12px;padding:6px 14px;color:#EF4444;border-color:rgba(239,68,68,.3)">+ Signaler</button>
+            <button class="btn-outline" style="font-size:12px;padding:6px 14px;color:#EF4444;border-color:rgba(239,68,68,.3)" onclick="document.querySelector('[data-section=incidents]').click()">+ Signaler</button>
           </div>
-          <div style="padding:16px 22px;display:flex;flex-direction:column;gap:10px">
-            <div style="display:flex;align-items:center;gap:14px;background:var(--bg-input);border-radius:12px;padding:14px 16px">
-              <div style="width:36px;height:36px;border-radius:10px;background:rgba(251,146,60,.12);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">⚠️</div>
-              <div style="flex:1"><div style="font-weight:700;font-size:14px;color:var(--txt-main)">Accident mineur</div><div style="color:var(--txt-sub);font-size:12px">Mercedes S · Ibrahima Sow · 08/06/2025</div></div>
-              <span class="badge badge-yellow">En traitement</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:14px;background:var(--bg-input);border-radius:12px;padding:14px 16px">
-              <div style="width:36px;height:36px;border-radius:10px;background:rgba(34,197,94,.1);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🔧</div>
-              <div style="flex:1"><div style="font-weight:700;font-size:14px;color:var(--txt-main)">Panne moteur</div><div style="color:var(--txt-sub);font-size:12px">Peugeot 508 · Aliou Mbaye · 05/06/2025</div></div>
-              <span class="badge badge-green">Résolu</span>
-            </div>
-          </div>
+          <div id="db-incidents-recent" class="db-list">Chargement…</div>
         </div>
       </div>
 
@@ -158,17 +147,25 @@ export const dashboardPage = `
         <div class="db-card">
           <div class="db-card-header">
             <span class="db-card-title">Réservations en cours</span>
-            <button class="btn-yellow" style="font-size:12px;padding:6px 14px" onclick="window.location.hash='reservation'">+ Nouvelle</button>
+            <div style="display:flex;gap:10px;align-items:center">
+              <span class="badge badge-blue" id="db-res-count">—</span>
+              <button class="btn-yellow" style="font-size:12px;padding:6px 14px" onclick="window.location.hash='reservation'">+ Nouvelle</button>
+            </div>
           </div>
           <div style="overflow-x:auto">
             <table class="db-table">
-              <thead><tr><th>ID</th><th>Client</th><th>Chauffeur</th><th>Voiture</th><th>Trajet</th><th>Durée</th><th>Statut</th><th>Montant</th></tr></thead>
-              <tbody>
-                <tr><td class="yellow">RES-001</td><td>Amadou Diallo</td><td class="muted">Ibrahima Sow</td><td class="muted">Mercedes S</td><td><div>Dakar - Plateau</div><div class="muted" style="font-size:11px">→ Aéroport LSS</div></td><td class="muted">09:00 – 10:30</td><td><span class="badge badge-green">En cours</span></td><td style="font-weight:700">45 000 F</td></tr>
-                <tr><td class="yellow">RES-002</td><td>Fatou Ndiaye</td><td class="muted">Moussa Ba</td><td class="muted">Toyota LC</td><td><div>Almadies</div><div class="muted" style="font-size:11px">→ Thiès</div></td><td class="muted">07:00 – 10:00</td><td><span class="badge badge-gray">Terminé</span></td><td style="font-weight:700">120 000 F</td></tr>
-                <tr><td class="yellow">RES-003</td><td>Oumar Sarr</td><td class="muted">Seydou Diouf</td><td class="muted">BMW Série 7</td><td><div>Mermoz</div><div class="muted" style="font-size:11px">→ Saly</div></td><td class="muted">14:00 – 17:30</td><td><span class="badge badge-yellow">Planifié</span></td><td style="font-weight:700">180 000 F</td></tr>
-                <tr><td class="yellow">RES-004</td><td>Aïssatou Fall</td><td class="muted">Cheikh Kane</td><td class="muted">Hyundai Staria</td><td><div>Point E</div><div class="muted" style="font-size:11px">→ Saint-Louis</div></td><td class="muted">06:00 – 14:00</td><td><span class="badge badge-yellow">Planifié</span></td><td style="font-weight:700">320 000 F</td></tr>
-                <tr><td class="yellow">RES-005</td><td>Mamadou Touré</td><td class="muted">Aliou Mbaye</td><td class="muted">Peugeot 508</td><td><div>Sacré-Cœur</div><div class="muted" style="font-size:11px">→ Dakar Port</div></td><td class="muted">11:00 – 12:00</td><td><span class="badge badge-red">Annulé</span></td><td style="font-weight:700">30 000 F</td></tr>
+              <thead>
+                <tr>
+                  <th>ID</th><th>Client</th><th>Chauffeur</th><th>Voiture</th>
+                  <th>Trajet</th><th>Durée</th><th>Statut</th><th>Montant</th>
+                </tr>
+              </thead>
+              <tbody id="db-res-body">
+                <tr>
+                  <td colspan="8" class="muted" style="text-align:center;padding:24px">
+                    Chargement…
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -179,19 +176,29 @@ export const dashboardPage = `
       <div class="db-section" id="section-flotte">
         <div class="db-card">
           <div class="db-card-header">
-            <span class="db-card-title">🚗 Gestion de la Flotte</span>
-            <button class="btn-yellow" style="font-size:12px;padding:6px 14px">+ Ajouter</button>
+            <span class="db-card-title"> Gestion de la Flotte</span>
+            <button class="btn-yellow" id="btn-add-vehicle" style="font-size:12px;padding:6px 14px">+ Ajouter</button>
           </div>
+          <form id="vehicle-form" class="db-inline-form" style="display:none">
+            <input type="hidden" id="vehicle-id" />
+            <input id="vehicle-modele" class="form-input" placeholder="Modèle" required />
+            <input id="vehicle-categorie" class="form-input" placeholder="Catégorie" required />
+            <input id="vehicle-places" class="form-input" type="number" min="1" placeholder="Places" required />
+            <select id="vehicle-statut" class="form-input" required>
+              <option>Disponible</option>
+              <option>Réservé</option>
+              <option>En maintenance</option>
+              <option>Hors service</option>
+            </select>
+            <input id="vehicle-prix" class="form-input" type="number" min="0" step="1000" placeholder="Prix/h" required />
+            <button class="btn-yellow" type="submit">Enregistrer</button>
+            <button class="btn-outline" type="button" id="cancel-vehicle">Annuler</button>
+          </form>
           <div style="overflow-x:auto">
             <table class="db-table">
-              <thead><tr><th>ID</th><th>Modèle</th><th>Catégorie</th><th>Places</th><th>Statut</th><th>Prix/h</th></tr></thead>
-              <tbody>
-                <tr><td class="yellow">VEH-01</td><td style="font-weight:600">Mercedes Classe S</td><td class="muted">Berline Luxe</td><td class="muted">4</td><td><span class="badge badge-green">Disponible</span></td><td style="font-weight:700;color:var(--yellow)">45 000 F</td></tr>
-                <tr><td class="yellow">VEH-02</td><td style="font-weight:600">BMW Série 7</td><td class="muted">Executive</td><td class="muted">4</td><td><span class="badge badge-red">Réservé</span></td><td style="font-weight:700;color:var(--yellow)">60 000 F</td></tr>
-                <tr><td class="yellow">VEH-03</td><td style="font-weight:600">Peugeot 508</td><td class="muted">Berline Confort</td><td class="muted">4</td><td><span class="badge badge-green">Disponible</span></td><td style="font-weight:700;color:var(--yellow)">30 000 F</td></tr>
-                <tr><td class="yellow">VEH-04</td><td style="font-weight:600">Toyota Land Cruiser</td><td class="muted">SUV Premium</td><td class="muted">7</td><td><span class="badge badge-green">Disponible</span></td><td style="font-weight:700;color:var(--yellow)">55 000 F</td></tr>
-                <tr><td class="yellow">VEH-05</td><td style="font-weight:600">Toyota Hiace</td><td class="muted">Van Confort</td><td class="muted">9</td><td><span class="badge badge-yellow">En maintenance</span></td><td style="font-weight:700;color:var(--yellow)">40 000 F</td></tr>
-                <tr><td class="yellow">VEH-06</td><td style="font-weight:600">Mercedes Sprinter</td><td class="muted">Minibus</td><td class="muted">16</td><td><span class="badge badge-green">Disponible</span></td><td style="font-weight:700;color:var(--yellow)">75 000 F</td></tr>
+              <thead><tr><th>ID</th><th>Modèle</th><th>Catégorie</th><th>Places</th><th>Statut</th><th>Prix/h</th><th>Actions</th></tr></thead>
+              <tbody id="db-vehicles-body">
+                <tr><td colspan="7" class="muted" style="text-align:center;padding:24px">Chargement…</td></tr>
               </tbody>
             </table>
           </div>
@@ -203,17 +210,29 @@ export const dashboardPage = `
         <div class="db-card">
           <div class="db-card-header">
             <span class="db-card-title">Gestion des Chauffeurs</span>
-            <button class="btn-yellow" style="font-size:12px;padding:6px 14px">+ Ajouter</button>
+            <button class="btn-yellow" id="btn-add-driver" style="font-size:12px;padding:6px 14px">+ Ajouter</button>
           </div>
+          <form id="driver-form" class="db-inline-form" style="display:none">
+            <input type="hidden" id="driver-id" />
+            <input id="driver-nom" class="form-input" placeholder="Nom complet" required />
+            <input id="driver-telephone" class="form-input" placeholder="Téléphone" required />
+            <input id="driver-vehicule" class="form-input" placeholder="Véhicule assigné" required />
+            <select id="driver-statut" class="form-input" required>
+              <option>Disponible</option>
+              <option>En service</option>
+              <option>Congé</option>
+              <option>Suspendu</option>
+            </select>
+            <input id="driver-note" class="form-input" type="number" min="0" max="5" step="0.1" placeholder="Note" required />
+            <input id="driver-trajets" class="form-input" type="number" min="0" placeholder="Trajets" required />
+            <button class="btn-yellow" type="submit">Enregistrer</button>
+            <button class="btn-outline" type="button" id="cancel-driver">Annuler</button>
+          </form>
           <div style="overflow-x:auto">
             <table class="db-table">
               <thead><tr><th>ID</th><th>Nom</th><th>Téléphone</th><th>Véhicule</th><th>Statut</th><th>Note</th><th>Trajets</th><th>Action</th></tr></thead>
-              <tbody>
-                <tr><td class="yellow">CHF-01</td><td><div style="display:flex;align-items:center;gap:8px"><div style="width:32px;height:32px;border-radius:50%;background:var(--yellow);color:#111827;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center">IS</div>Ibrahima Sow</div></td><td class="muted">+221 77 123 4567</td><td class="muted">Mercedes S</td><td><span class="badge badge-green">En service</span></td><td style="color:var(--yellow);font-weight:700">4.9 ★</td><td class="muted">312</td><td><button class="btn-outline" style="font-size:11px;padding:4px 10px">Gérer</button></td></tr>
-                <tr><td class="yellow">CHF-02</td><td><div style="display:flex;align-items:center;gap:8px"><div style="width:32px;height:32px;border-radius:50%;background:var(--yellow);color:#111827;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center">MB</div>Moussa Ba</div></td><td class="muted">+221 76 234 5678</td><td class="muted">Toyota LC</td><td><span class="badge badge-green">En service</span></td><td style="color:var(--yellow);font-weight:700">4.8 ★</td><td class="muted">245</td><td><button class="btn-outline" style="font-size:11px;padding:4px 10px">Gérer</button></td></tr>
-                <tr><td class="yellow">CHF-03</td><td><div style="display:flex;align-items:center;gap:8px"><div style="width:32px;height:32px;border-radius:50%;background:var(--yellow);color:#111827;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center">SD</div>Seydou Diouf</div></td><td class="muted">+221 78 345 6789</td><td class="muted">BMW Série 7</td><td><span class="badge badge-blue">Disponible</span></td><td style="color:var(--yellow);font-weight:700">4.7 ★</td><td class="muted">198</td><td><button class="btn-outline" style="font-size:11px;padding:4px 10px">Gérer</button></td></tr>
-                <tr><td class="yellow">CHF-04</td><td><div style="display:flex;align-items:center;gap:8px"><div style="width:32px;height:32px;border-radius:50%;background:var(--yellow);color:#111827;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center">CK</div>Cheikh Kane</div></td><td class="muted">+221 77 456 7890</td><td class="muted">Hyundai Staria</td><td><span class="badge badge-green">En service</span></td><td style="color:var(--yellow);font-weight:700">4.9 ★</td><td class="muted">421</td><td><button class="btn-outline" style="font-size:11px;padding:4px 10px">Gérer</button></td></tr>
-                <tr><td class="yellow">CHF-05</td><td><div style="display:flex;align-items:center;gap:8px"><div style="width:32px;height:32px;border-radius:50%;background:var(--yellow);color:#111827;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center">AM</div>Aliou Mbaye</div></td><td class="muted">+221 76 567 8901</td><td class="muted">Peugeot 508</td><td><span class="badge badge-gray">Congé</span></td><td style="color:var(--yellow);font-weight:700">4.6 ★</td><td class="muted">167</td><td><button class="btn-outline" style="font-size:11px;padding:4px 10px">Gérer</button></td></tr>
+              <tbody id="db-drivers-body">
+                <tr><td colspan="8" class="muted" style="text-align:center;padding:24px">Chargement…</td></tr>
               </tbody>
             </table>
           </div>
@@ -224,7 +243,7 @@ export const dashboardPage = `
       <div class="db-section" id="section-clients">
         <div class="db-card">
           <div class="db-card-header">
-            <span class="db-card-title">👥 Clients inscrits</span>
+            <span class="db-card-title"> Clients inscrits</span>
             <span class="badge badge-blue" id="db-client-count2">— comptes</span>
           </div>
           <div style="overflow-x:auto">
@@ -239,7 +258,7 @@ export const dashboardPage = `
       <!-- ══ SECTION ITINÉRAIRES ══ -->
       <div class="db-section" id="section-itineraires">
         <div class="db-card">
-          <div class="db-card-header"><span class="db-card-title">🗺️ Trajets en cours</span></div>
+          <div class="db-card-header"><span class="db-card-title"> Trajets en cours</span></div>
           <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
             <div style="background:var(--bg-input);border-radius:14px;padding:16px;display:flex;justify-content:space-between;align-items:center">
               <div style="display:flex;align-items:center;gap:12px">
@@ -277,116 +296,52 @@ export const dashboardPage = `
       <div class="db-section" id="section-incidents">
         <div class="db-card">
           <div class="db-card-header">
-            <span class="db-card-title">⚠️ Incidents & Imprévus</span>
-            <button class="btn-outline" style="font-size:12px;padding:6px 14px;color:#EF4444;border-color:rgba(239,68,68,.3)">+ Signaler</button>
+            <span class="db-card-title"> Incidents & Imprévus</span>
+            <button class="btn-outline" id="btn-add-incident" style="font-size:12px;padding:6px 14px;color:#EF4444;border-color:rgba(239,68,68,.3)">+ Signaler</button>
           </div>
-          <div style="padding:16px 22px;display:flex;flex-direction:column;gap:10px">
-            <div style="display:flex;align-items:center;gap:14px;background:var(--bg-input);border-radius:12px;padding:14px 16px">
-              <div style="width:36px;height:36px;border-radius:10px;background:rgba(251,146,60,.12);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">⚠️</div>
-              <div style="flex:1"><div style="font-weight:700;font-size:14px;color:var(--txt-main)">Accident mineur</div><div style="color:var(--txt-sub);font-size:12px">Mercedes S · Ibrahima Sow · 08/06/2025</div></div>
-              <span class="badge badge-yellow">En traitement</span>
-              <button class="btn-outline" style="font-size:11px;padding:4px 10px">Gérer →</button>
-            </div>
-            <div style="display:flex;align-items:center;gap:14px;background:var(--bg-input);border-radius:12px;padding:14px 16px">
-              <div style="width:36px;height:36px;border-radius:10px;background:rgba(34,197,94,.1);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🔧</div>
-              <div style="flex:1"><div style="font-weight:700;font-size:14px;color:var(--txt-main)">Panne moteur</div><div style="color:var(--txt-sub);font-size:12px">Peugeot 508 · Aliou Mbaye · 05/06/2025</div></div>
-              <span class="badge badge-green">Résolu</span>
-              <button class="btn-outline" style="font-size:11px;padding:4px 10px">Gérer →</button>
-            </div>
-            <div style="display:flex;align-items:center;gap:14px;background:var(--bg-input);border-radius:12px;padding:14px 16px">
-              <div style="width:36px;height:36px;border-radius:10px;background:rgba(239,68,68,.1);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🚨</div>
-              <div style="flex:1"><div style="font-weight:700;font-size:14px;color:var(--txt-main)">Retard client</div><div style="color:var(--txt-sub);font-size:12px">Toyota LC · Moussa Ba · 09/06/2025</div></div>
-              <span class="badge badge-red">Ouvert</span>
-              <button class="btn-outline" style="font-size:11px;padding:4px 10px">Gérer →</button>
-            </div>
-          </div>
+          <form id="incident-form" class="db-inline-form" style="display:none">
+            <input type="hidden" id="incident-id" />
+            <input id="incident-titre" class="form-input" placeholder="Titre" required />
+            <select id="incident-type" class="form-input" required>
+              <option>Accident</option>
+              <option>Panne</option>
+              <option>Retard</option>
+              <option>Imprévu</option>
+            </select>
+            <input id="incident-vehicule" class="form-input" placeholder="Véhicule" required />
+            <input id="incident-chauffeur" class="form-input" placeholder="Chauffeur" required />
+            <input id="incident-date" class="form-input" type="date" required />
+            <select id="incident-statut" class="form-input" required>
+              <option>Ouvert</option>
+              <option>En traitement</option>
+              <option>Résolu</option>
+            </select>
+            <select id="incident-priorite" class="form-input" required>
+              <option>Basse</option>
+              <option>Moyenne</option>
+              <option>Haute</option>
+            </select>
+            <textarea id="incident-description" class="form-input" rows="2" placeholder="Description"></textarea>
+            <button class="btn-yellow" type="submit">Enregistrer</button>
+            <button class="btn-outline" type="button" id="cancel-incident">Annuler</button>
+          </form>
+          <div id="db-incidents-list" class="db-list">Chargement…</div>
         </div>
       </div>
 
       <!-- ══ SECTION PAIEMENTS ══ -->
       <div class="db-section" id="section-paiements">
         <div class="db-card">
-          <div class="db-card-header"><span class="db-card-title">💳 Historique des paiements</span></div>
-          <div style="padding:16px 22px;display:flex;flex-direction:column;gap:10px">
-            <div style="display:flex;align-items:center;gap:14px;background:var(--bg-input);border-radius:12px;padding:14px 16px">
-              <div style="width:36px;height:36px;border-radius:10px;background:rgba(250,204,21,.12);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">💳</div>
-              <div style="flex:1"><div style="font-weight:700;font-size:14px;color:var(--txt-main)">Amadou Diallo</div><div style="color:var(--txt-sub);font-size:12px">PAY-001 · Wave · 09/06/2025 09:15</div></div>
-              <div style="font-weight:800;color:var(--txt-main)">45 000 F</div>
-              <span class="badge badge-green">Confirmé</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:14px;background:var(--bg-input);border-radius:12px;padding:14px 16px">
-              <div style="width:36px;height:36px;border-radius:10px;background:rgba(250,204,21,.12);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">💳</div>
-              <div style="flex:1"><div style="font-weight:700;font-size:14px;color:var(--txt-main)">Fatou Ndiaye</div><div style="color:var(--txt-sub);font-size:12px">PAY-002 · Orange Money · 09/06/2025 07:30</div></div>
-              <div style="font-weight:800;color:var(--txt-main)">120 000 F</div>
-              <span class="badge badge-green">Confirmé</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:14px;background:var(--bg-input);border-radius:12px;padding:14px 16px">
-              <div style="width:36px;height:36px;border-radius:10px;background:rgba(250,204,21,.12);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">💳</div>
-              <div style="flex:1"><div style="font-weight:700;font-size:14px;color:var(--txt-main)">Oumar Sarr</div><div style="color:var(--txt-sub);font-size:12px">PAY-003 · Carte Visa · 08/06/2025 14:00</div></div>
-              <div style="font-weight:800;color:var(--txt-main)">180 000 F</div>
-              <span class="badge badge-yellow">En attente</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:14px;background:var(--bg-input);border-radius:12px;padding:14px 16px">
-              <div style="width:36px;height:36px;border-radius:10px;background:rgba(250,204,21,.12);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">💳</div>
-              <div style="flex:1"><div style="font-weight:700;font-size:14px;color:var(--txt-main)">Mamadou Touré</div><div style="color:var(--txt-sub);font-size:12px">PAY-004 · Wave · 08/06/2025 11:00</div></div>
-              <div style="font-weight:800;color:var(--txt-main)">30 000 F</div>
-              <span class="badge badge-blue">Remboursé</span>
-            </div>
-          </div>
+          <div class="db-card-header"><span class="db-card-title"> Historique des paiements</span></div>
+          <div id="db-payments-list" class="db-list">Chargement…</div>
         </div>
       </div>
 
       <!-- ══ SECTION RAPPORTS ══ -->
       <div class="db-section" id="section-rapports">
         <div class="db-card">
-          <div class="db-card-header"><span class="db-card-title">📊 Rapports & Statistiques</span></div>
-          <div style="padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:16px">
-            <div style="background:var(--bg-input);border-radius:14px;padding:20px">
-              <div style="font-size:12px;font-weight:700;color:var(--yellow);letter-spacing:1px;margin-bottom:8px">REVENUS CE MOIS</div>
-              <div style="font-size:32px;font-weight:900;color:var(--txt-main)">42.6M <span style="font-size:14px;color:var(--txt-sub)">FCFA</span></div>
-              <div style="color:#22C55E;font-size:13px;margin-top:4px">↑ +18% vs mois dernier</div>
-            </div>
-            <div style="background:var(--bg-input);border-radius:14px;padding:20px">
-              <div style="font-size:12px;font-weight:700;color:var(--yellow);letter-spacing:1px;margin-bottom:8px">TRAJETS CE MOIS</div>
-              <div style="font-size:32px;font-weight:900;color:var(--txt-main)">284</div>
-              <div style="color:#22C55E;font-size:13px;margin-top:4px">↑ +12% vs mois dernier</div>
-            </div>
-            <div style="background:var(--bg-input);border-radius:14px;padding:20px">
-              <div style="font-size:12px;font-weight:700;color:var(--yellow);letter-spacing:1px;margin-bottom:8px">TAUX DE SATISFACTION</div>
-              <div style="font-size:32px;font-weight:900;color:var(--txt-main)">98%</div>
-              <div style="color:var(--txt-sub);font-size:13px;margin-top:4px">Basé sur 2 400+ avis</div>
-            </div>
-            <div style="background:var(--bg-input);border-radius:14px;padding:20px">
-              <div style="font-size:12px;font-weight:700;color:var(--yellow);letter-spacing:1px;margin-bottom:8px">NOUVEAUX CLIENTS</div>
-              <div style="font-size:32px;font-weight:900;color:var(--txt-main)">47</div>
-              <div style="color:#22C55E;font-size:13px;margin-top:4px">↑ +9% vs mois dernier</div>
-            </div>
-          </div>
-          <div style="padding:0 24px 24px">
-            <div style="font-size:14px;font-weight:700;color:var(--txt-main);margin-bottom:12px">Top véhicules ce mois</div>
-            <div style="display:flex;flex-direction:column;gap:8px">
-              <div style="display:flex;align-items:center;gap:12px">
-                <div style="width:120px;font-size:13px;color:var(--txt-sub)">Mercedes S</div>
-                <div style="flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="width:85%;height:100%;background:var(--yellow);border-radius:4px"></div></div>
-                <div style="font-size:13px;font-weight:700;color:var(--txt-main);width:40px;text-align:right">85%</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:12px">
-                <div style="width:120px;font-size:13px;color:var(--txt-sub)">Toyota LC</div>
-                <div style="flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="width:72%;height:100%;background:#818CF8;border-radius:4px"></div></div>
-                <div style="font-size:13px;font-weight:700;color:var(--txt-main);width:40px;text-align:right">72%</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:12px">
-                <div style="width:120px;font-size:13px;color:var(--txt-sub)">BMW Série 7</div>
-                <div style="flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="width:61%;height:100%;background:#22C55E;border-radius:4px"></div></div>
-                <div style="font-size:13px;font-weight:700;color:var(--txt-main);width:40px;text-align:right">61%</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:12px">
-                <div style="width:120px;font-size:13px;color:var(--txt-sub)">Peugeot 508</div>
-                <div style="flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="width:48%;height:100%;background:#FB923C;border-radius:4px"></div></div>
-                <div style="font-size:13px;font-weight:700;color:var(--txt-main);width:40px;text-align:right">48%</div>
-              </div>
-            </div>
-          </div>
+          <div class="db-card-header"><span class="db-card-title"> Rapports & Statistiques</span></div>
+          <div id="db-reports-content">Chargement…</div>
         </div>
       </div>
 

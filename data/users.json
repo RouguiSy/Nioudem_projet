@@ -28,5 +28,193 @@
       "createdAt": "2026-06-12"
     }
   ],
+  "reservations": [
+    {
+      "id": "oxkBUfhU47Q",
+      "clientId": "NoWUOCYYd3E",
+      "clientNom": "kiki odc",
+      "clientTel": "773438165",
+      "depart": "Almadies",
+      "destination": "Aéroport LSS",
+      "date": "2026-06-27",
+      "heure": "11:33",
+      "duree": 6,
+      "vehicule": "Peugeot 508",
+      "chauffeur": "Moussa Ba",
+      "paiement": "Carte bancaire",
+      "montant": 180000,
+      "statut": "Planifié",
+      "notes": "AZ",
+      "createdAt": "2026-06-15T10:00:34.177Z"
+    },
+    {
+      "id": "9PKXV0dsT5Q",
+      "clientId": "NoWUOCYYd3E",
+      "clientNom": "kiki odc",
+      "clientTel": "773438165",
+      "depart": "Plateau",
+      "destination": "Thiès",
+      "date": "2026-06-04",
+      "heure": "12:00",
+      "duree": 8,
+      "vehicule": "Mercedes Classe S",
+      "chauffeur": "Ibrahima Sow",
+      "paiement": "Wave",
+      "montant": 360000,
+      "statut": "Planifié",
+      "notes": "",
+      "createdAt": "2026-06-15T11:46:22.029Z"
+    },
+    {
+      "id": "htON5JRbP7A",
+      "clientId": "Qz0Du7RAYt0",
+      "clientNom": "momo odc",
+      "clientTel": "27789900",
+      "depart": "Dakar Centre",
+      "destination": "Thiès",
+      "date": "2026-06-11",
+      "heure": "12:22",
+      "duree": 4,
+      "vehicule": "Toyota Land Cruiser",
+      "chauffeur": "Ibrahima Sow",
+      "paiement": "Wave",
+      "montant": 220000,
+      "statut": "Planifié",
+      "notes": "SIEGE ENFANT",
+      "createdAt": "2026-06-16T00:29:38.090Z"
+    }
+  ],
+  "vehicles": [
+    {
+      "id": "VEH-02",
+      "modele": "BMW Série 7",
+      "categorie": "Executive",
+      "places": 4,
+      "statut": "Réservé",
+      "prixHeure": 60000
+    },
+    {
+      "id": "VEH-03",
+      "modele": "Peugeot 508",
+      "categorie": "Berline Confort",
+      "places": 4,
+      "statut": "Disponible",
+      "prixHeure": 30000
+    },
+    {
+      "id": "VEH-04",
+      "modele": "Toyota Land Cruiser",
+      "categorie": "SUV Premium",
+      "places": 7,
+      "statut": "Disponible",
+      "prixHeure": 55000
+    },
+    {
+      "id": "VEH-05",
+      "modele": "Toyota Hiace",
+      "categorie": "Van Confort",
+      "places": 9,
+      "statut": "En maintenance",
+      "prixHeure": 40000
+    },
+    {
+      "id": "VEH-06",
+      "modele": "Mercedes Sprinter",
+      "categorie": "Minibus",
+      "places": 16,
+      "statut": "Disponible",
+      "prixHeure": 75000
+    },
+    {
+      "id": "56M8gD2kPVU",
+      "modele": "BMW",
+      "categorie": "23",
+      "places": 8,
+      "statut": "En maintenance",
+      "prixHeure": 9000
+    }
+  ],
+  "drivers": [
+    {
+      "id": "CHF-01",
+      "nom": "Ibrahima Sow",
+      "telephone": "+221 77 123 4567",
+      "vehicule": "Mercedes Classe S",
+      "statut": "En service",
+      "note": 4.9,
+      "trajets": 312
+    },
+    {
+      "id": "CHF-02",
+      "nom": "Moussa Ba",
+      "telephone": "+221 76 234 5678",
+      "vehicule": "Toyota Land Cruiser",
+      "statut": "En service",
+      "note": 4.8,
+      "trajets": 245
+    },
+    {
+      "id": "CHF-03",
+      "nom": "Seydou Diouf",
+      "telephone": "+221 78 345 6789",
+      "vehicule": "BMW Série 7",
+      "statut": "Disponible",
+      "note": 4.7,
+      "trajets": 198
+    },
+    {
+      "id": "CHF-04",
+      "nom": "Cheikh Kane",
+      "telephone": "+221 77 456 7890",
+      "vehicule": "Hyundai Staria",
+      "statut": "En service",
+      "note": 4.9,
+      "trajets": 421
+    },
+    {
+      "id": "CHF-05",
+      "nom": "Aliou Mbaye",
+      "telephone": "+221 76 567 8901",
+      "vehicule": "Peugeot 508",
+      "statut": "Congé",
+      "note": 4.6,
+      "trajets": 167
+    }
+  ],
+  "incidents": [
+    {
+      "id": "INC-01",
+      "titre": "Accident mineur",
+      "type": "Accident",
+      "vehicule": "Mercedes Classe S",
+      "chauffeur": "Ibrahima Sow",
+      "date": "2026-06-08",
+      "statut": "En traitement",
+      "priorite": "Haute",
+      "description": "Accrochage léger, véhicule inspecté."
+    },
+    {
+      "id": "INC-02",
+      "titre": "Panne moteur",
+      "type": "Panne",
+      "vehicule": "Peugeot 508",
+      "chauffeur": "Aliou Mbaye",
+      "date": "2026-06-05",
+      "statut": "Résolu",
+      "priorite": "Haute",
+      "description": "Intervention garage terminée."
+    },
+    {
+      "id": "INC-03",
+      "titre": "Retard client",
+      "type": "Imprévu",
+      "vehicule": "Toyota Land Cruiser",
+      "chauffeur": "Moussa Ba",
+      "date": "2026-06-09",
+      "statut": "Ouvert",
+      "priorite": "Basse",
+      "description": "Client absent au point de départ."
+    }
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }

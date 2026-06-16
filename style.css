@@ -196,6 +196,29 @@ html.dark .stat-card:hover { box-shadow:0 20px 40px rgba(0,0,0,.35); }
 .footer { display:flex; align-items:center; justify-content:space-between; padding:40px 64px; border-top:1px solid var(--border-faint); background:var(--bg); }
 .footer-copy,.footer-loc { color:var(--txt-faint); font-size:13px; }
 
+/* ══════════════════════════════════════════════════════
+   PAGES INFO / TARIFS / À PROPOS
+   ══════════════════════════════════════════════════════ */
+.info-page { background:var(--bg); min-height:calc(100vh - 77px); padding:64px; }
+.info-hero { max-width:760px; margin:0 auto 44px; text-align:center; }
+.info-title { font-size:48px; font-weight:900; line-height:1.08; letter-spacing:-1px; color:var(--txt-main); margin-bottom:18px; }
+.info-sub { color:var(--txt-sub); font-size:17px; line-height:1.7; }
+.pricing-grid { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:20px; max-width:1180px; margin:0 auto; }
+.pricing-card { background:var(--bg-card); border:1px solid var(--border-faint); border-radius:18px; padding:26px; display:flex; flex-direction:column; gap:16px; min-height:300px; }
+.pricing-card--highlight { border-color:rgba(250,204,21,.45); box-shadow:0 22px 55px rgba(250,204,21,.12); }
+.pricing-card h2 { color:var(--txt-main); font-size:22px; font-weight:850; }
+.pricing-card p { color:var(--txt-sub); line-height:1.6; font-size:14px; flex:1; }
+.pricing-price { color:var(--yellow); font-size:34px; font-weight:900; letter-spacing:-.5px; }
+.pricing-price span { color:var(--txt-faint); font-size:13px; font-weight:700; letter-spacing:0; }
+.info-band { max-width:1180px; margin:28px auto 0; padding:28px; background:rgba(250,204,21,.08); border:1px solid rgba(250,204,21,.2); border-radius:20px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+.info-band h2 { color:var(--txt-main); font-size:22px; font-weight:850; margin-bottom:6px; }
+.info-band p { color:var(--txt-sub); line-height:1.6; }
+.about-hero { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; max-width:1180px; margin:0 auto 42px; }
+.about-copy .hero-btns { margin:32px 0 0; }
+.about-media { border-radius:28px; overflow:hidden; box-shadow:0 35px 80px rgba(0,0,0,.18); }
+.about-media img { width:100%; height:440px; object-fit:cover; }
+.values-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; max-width:1180px; margin:0 auto; }
+
 
 /* ══════════════════════════════════════════════════════
    PAGE CONNEXION / INSCRIPTION  (layout split)
@@ -343,6 +366,46 @@ html.dark .db-topbar { background:rgba(17,24,39,.8); }
 .db-table td { padding:13px 16px; font-size:13px; border-top:1px solid var(--border-faint); color:var(--txt-main); white-space:nowrap; }
 .db-table td.muted { color:var(--txt-sub); }
 .db-table td.yellow { color:var(--yellow); font-weight:700; }
+.db-inline-form {
+  grid-template-columns:repeat(3, minmax(160px, 1fr));
+  gap:12px;
+  padding:18px 22px;
+  border-bottom:1px solid var(--border-faint);
+  background:var(--bg-input);
+}
+.db-inline-form textarea { grid-column:span 2; resize:vertical; }
+.db-inline-form .btn-yellow,
+.db-inline-form .btn-outline { min-height:42px; }
+.db-action-btn { font-size:11px; padding:5px 10px; margin-right:6px; }
+.db-action-btn.danger { color:#EF4444; border-color:rgba(239,68,68,.25); }
+.db-mini-avatar {
+  width:32px; height:32px; border-radius:50%; background:var(--yellow);
+  color:#111827; font-weight:800; font-size:11px;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.db-list { padding:16px 22px; display:flex; flex-direction:column; gap:10px; }
+.db-list-row {
+  display:flex; align-items:center; gap:14px;
+  background:var(--bg-input); border-radius:12px; padding:14px 16px;
+}
+.db-list-icon {
+  width:36px; height:36px; border-radius:10px;
+  background:rgba(250,204,21,.12);
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; flex-shrink:0; color:var(--yellow); font-weight:900;
+}
+.db-report-grid { padding:24px; display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.db-report-card { background:var(--bg-input); border-radius:14px; padding:20px; }
+.db-report-card div { font-size:12px; font-weight:700; color:var(--yellow); letter-spacing:1px; margin-bottom:8px; }
+.db-report-card strong { font-size:32px; font-weight:900; color:var(--txt-main); display:block; }
+.db-report-card strong span { font-size:14px; color:var(--txt-sub); }
+.db-report-card small { color:var(--txt-sub); font-size:13px; margin-top:4px; display:block; }
+.db-report-bars { padding:0 24px 24px; }
+.db-bar-row { display:flex; align-items:center; gap:12px; margin-bottom:9px; }
+.db-bar-row div { width:150px; font-size:13px; color:var(--txt-sub); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.db-bar-row span { flex:1; height:8px; background:var(--border); border-radius:4px; overflow:hidden; }
+.db-bar-row i { display:block; height:100%; background:var(--yellow); border-radius:4px; }
+.db-bar-row strong { font-size:13px; font-weight:700; color:var(--txt-main); width:40px; text-align:right; }
 
 /* Badge statut */
 .badge { display:inline-flex; align-items:center; font-size:11px; font-weight:700; padding:3px 10px; border-radius:100px; white-space:nowrap; }
@@ -784,3 +847,31 @@ html.dark .car-scene { background: linear-gradient(135deg, #070E1A 0%, #0F172A 1
 .res-nav { display:flex; justify-content:space-between; align-items:center; margin-top:32px; }
 
 .yellow { color:var(--yellow); }
+
+@media (max-width: 980px) {
+  .info-page { padding:42px 24px; }
+  .info-title { font-size:38px; }
+  .pricing-grid,
+  .values-grid,
+  .about-hero { grid-template-columns:1fr; }
+  .about-media img { height:340px; }
+  .db-inline-form,
+  .db-report-grid { grid-template-columns:1fr 1fr; }
+}
+
+@media (max-width: 640px) {
+  .info-page { padding:32px 18px; }
+  .info-title { font-size:31px; }
+  .info-sub { font-size:15px; }
+  .pricing-card { min-height:auto; padding:22px; }
+  .pricing-price { font-size:28px; }
+  .info-band { align-items:flex-start; flex-direction:column; }
+  .about-copy .hero-btns { flex-direction:column; }
+  .about-media { border-radius:18px; }
+  .about-media img { height:260px; }
+  .db-inline-form,
+  .db-report-grid { grid-template-columns:1fr; }
+  .db-inline-form textarea { grid-column:span 1; }
+  .db-list-row { align-items:flex-start; flex-wrap:wrap; }
+  .db-bar-row div { width:110px; }
+}
