@@ -1,120 +1,239 @@
-const BASE = 'http://127.0.0.1:3000'; 
-const API_USERS        = `${BASE}/users`;
-const API_RESERVATIONS = `${BASE}/reservations`;
-const API_VEHICLES     = `${BASE}/vehicles`;
-const API_DRIVERS      = `${BASE}/drivers`;
-const API_INCIDENTS    = `${BASE}/incidents`;
+let DB = {
+    users: [],
+    reservations: [],
+    vehicles: [],
+    drivers: [],
+    incidents: [],
+};
 
-export async function initDB() {}
+export async function loadDB() {
+    try {
+        const response = await fetch('../data/users.json');
+        if (!response.ok) {
+            throw new Error('Impossible de charger les données');
+        }
+        const data = await response.json();
+        
+        DB.users = data.users || [];
+        DB.reservations = data.reservations || [];
+        DB.vehicles = data.vehicles || [];
+        DB.drivers = data.drivers || [];
+        DB.incidents = data.incidents || [];
+        
+        console.log('la base est chargée');
+        console.log(`📊 ${DB.users.length} utilisateurs, ${DB.reservations.length} réservations`);
+        
+        return DB;
+    } catch (error) {
+        console.error('boy chargement base bi amna erreur dée', error);
+        
+        DB = {
+            users: [
+                {
+                    id: 'USR-001',
+                    nom: 'Admin Système',
+                    email: 'admin@nioudeem.com',
+                    telephone: '+221 77 000 0000',
+                    password: 'admin123',
+                    role: 'admin',
+                    createdAt: '2024-01-01'
+                },
+                {
+                    id: 'USR-002',
+                    nom: 'Client Test',
+                    email: 'client@nioudeem.com',
+                    telephone: '+221 77 111 1111',
+                    password: 'client123',
+                    role: 'client',
+                    createdAt: '2024-01-15'
+                }
+            ],
+            reservations: [],
+            vehicles: [],
+            drivers: [],
+            incidents: [],
+        };
+        
+        return DB;
+    }
+}
+
+export function getDB() {
+    return DB;
+}
+
+export function setDB(data) {
+    DB = { ...DB, ...data };
+}
 
 export async function getUsers() {
-    const res = await fetch(API_USERS);
-    return await res.json();
+    return DB.users;
 }
 
 export async function findUser(email) {
-    const res   = await fetch(`${API_USERS}?email=${encodeURIComponent(email)}`);
-    const users = await res.json();
-    return users[0] || null;
+    return DB.users.find(user => user.email === email);
 }
 
 export async function addUser(user) {
-    await fetch(API_USERS, {
-        method : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body   : JSON.stringify(user)
-    });
+    DB.users.push(user);
+    await saveDB();
+    return user;
 }
 
+export async function updateUser(id, data) {
+    const index = DB.users.findIndex(u => u.id === id);
+    if (index !== -1) {
+        DB.users[index] = { ...DB.users[index], ...data };
+        await saveDB();
+        return DB.users[index];
+    }
+    return null;
+}
+
+export async function deleteUser(id) {
+    DB.users = DB.users.filter(u => u.id !== id);
+    await saveDB();
+}
 
 export async function getReservations() {
-    const res = await fetch(API_RESERVATIONS);
-    return await res.json();
+    return DB.reservations;
 }
 
 export async function getReservationsByUser(userId) {
-    const res  = await fetch(`${API_RESERVATIONS}?clientId=${userId}`);
-    return await res.json();
+    return DB.reservations.filter(r => r.clientId === userId);
 }
 
 export async function addReservation(reservation) {
-    const res = await fetch(API_RESERVATIONS, {
-        method : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body   : JSON.stringify(reservation)
-    });
-    return await res.json();
+    DB.reservations.push(reservation);
+    await saveDB();
+    return reservation;
 }
 
-async function postJSON(url, payload) {
-    const res = await fetch(url, {
-        method : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body   : JSON.stringify(payload)
-    });
-    return await res.json();
+export async function updateReservation(id, data) {
+    const index = DB.reservations.findIndex(r => r.id === id);
+    if (index !== -1) {
+        DB.reservations[index] = { ...DB.reservations[index], ...data };
+        await saveDB();
+        return DB.reservations[index];
+    }
+    return null;
 }
 
-async function patchJSON(url, payload) {
-    const res = await fetch(url, {
-        method : 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body   : JSON.stringify(payload)
-    });
-    return await res.json();
+export async function deleteReservation(id) {
+    DB.reservations = DB.reservations.filter(r => r.id !== id);
+    await saveDB();
 }
 
-async function deleteJSON(url) {
-    await fetch(url, { method: 'DELETE' });
-}
 
 export async function getVehicles() {
-    const res = await fetch(API_VEHICLES);
-    return await res.json();
+    return DB.vehicles;
 }
 
 export async function addVehicle(vehicle) {
-    return await postJSON(API_VEHICLES, vehicle);
+    DB.vehicles.push(vehicle);
+    await saveDB();
+    return vehicle;
 }
 
-export async function updateVehicle(id, vehicle) {
-    return await patchJSON(`${API_VEHICLES}/${encodeURIComponent(id)}`, vehicle);
+export async function updateVehicle(id, data) {
+    const index = DB.vehicles.findIndex(v => v.id === id);
+    if (index !== -1) {
+        DB.vehicles[index] = { ...DB.vehicles[index], ...data };
+        await saveDB();
+        return DB.vehicles[index];
+    }
+    return null;
 }
 
 export async function deleteVehicle(id) {
-    return await deleteJSON(`${API_VEHICLES}/${encodeURIComponent(id)}`);
+    DB.vehicles = DB.vehicles.filter(v => v.id !== id);
+    await saveDB();
 }
 
 export async function getDrivers() {
-    const res = await fetch(API_DRIVERS);
-    return await res.json();
+    return DB.drivers;
 }
 
 export async function addDriver(driver) {
-    return await postJSON(API_DRIVERS, driver);
+    DB.drivers.push(driver);
+    await saveDB();
+    return driver;
 }
 
-export async function updateDriver(id, driver) {
-    return await patchJSON(`${API_DRIVERS}/${encodeURIComponent(id)}`, driver);
+export async function updateDriver(id, data) {
+    const index = DB.drivers.findIndex(d => d.id === id);
+    if (index !== -1) {
+        DB.drivers[index] = { ...DB.drivers[index], ...data };
+        await saveDB();
+        return DB.drivers[index];
+    }
+    return null;
 }
 
 export async function deleteDriver(id) {
-    return await deleteJSON(`${API_DRIVERS}/${encodeURIComponent(id)}`);
+    DB.drivers = DB.drivers.filter(d => d.id !== id);
+    await saveDB();
 }
 
+
 export async function getIncidents() {
-    const res = await fetch(API_INCIDENTS);
-    return await res.json();
+    return DB.incidents;
 }
 
 export async function addIncident(incident) {
-    return await postJSON(API_INCIDENTS, incident);
+    DB.incidents.push(incident);
+    await saveDB();
+    return incident;
 }
 
-export async function updateIncident(id, incident) {
-    return await patchJSON(`${API_INCIDENTS}/${encodeURIComponent(id)}`, incident);
+export async function updateIncident(id, data) {
+    const index = DB.incidents.findIndex(i => i.id === id);
+    if (index !== -1) {
+        DB.incidents[index] = { ...DB.incidents[index], ...data };
+        await saveDB();
+        return DB.incidents[index];
+    }
+    return null;
 }
 
 export async function deleteIncident(id) {
-    return await deleteJSON(`${API_INCIDENTS}/${encodeURIComponent(id)}`);
+    DB.incidents = DB.incidents.filter(i => i.id !== id);
+    await saveDB();
+}
+
+
+async function saveDB() {
+    try {
+        localStorage.setItem('nioudeem_db', JSON.stringify(DB));
+        console.log('Base de données sauvegardée');
+    } catch (error) {
+        console.error(' boy dara sauvegardewoul:', error);
+    }
+}
+
+export function loadDBFromStorage() {
+    try {
+        const saved = localStorage.getItem('nioudeem_db');
+        if (saved) {
+            const data = JSON.parse(saved);
+            DB = { ...DB, ...data };
+            console.log(' Données chargées depuis localStorage');
+            return true;
+        }
+    } catch (error) {
+        console.error('Erreur de chargement localStorage:', error);
+    }
+    return false;
+}
+
+export function resetDB() {
+    localStorage.removeItem('nioudeem_db');
+    DB = {
+        users: [],
+        reservations: [],
+        vehicles: [],
+        drivers: [],
+        incidents: [],
+    };
+    console.log('Base de données réinitialisée');
 }

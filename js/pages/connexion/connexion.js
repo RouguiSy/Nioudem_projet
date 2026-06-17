@@ -1,4 +1,11 @@
-export const connexionPage = `
+import { getSession, setSession } from "../../session.js";
+import { showToast } from "../../toast.js";
+import { findUser } from "../../db.js";
+import { navigate } from "../../router.js";
+import { toggleTheme } from "../../theme.js";
+
+export function render() {
+  return `
 <div class="login-page">
   <div class="login-left">
     <img src="js/assets/images/ma_voiture.jpeg" alt="" class="login-bg-img" />
@@ -97,4 +104,113 @@ export const connexionPage = `
     </div>
   </div>
 </div>
-`;
+  `;
+}
+
+export function init() {
+  let currentRole = "client";
+
+  const adminBtn = document.getElementById("btn-admin");
+  const clientBtn = document.getElementById("btn-client");
+  const backBtn = document.getElementById("btn-back");
+  const loginForm = document.getElementById("login-form");
+
+  function showForm(role) {
+    currentRole = role;
+    const stepChoose = document.getElementById("step-choose");
+    const stepForm = document.getElementById("step-form");
+    if (stepChoose) stepChoose.style.display = "none";
+    if (stepForm) stepForm.style.display = "block";
+
+    const badge = document.getElementById("login-role-badge");
+    if (badge) {
+      badge.className = `login-role-badge ${role}`;
+      badge.textContent = role === "admin" ? "Administrateur" : "Espace Client";
+    }
+
+    const sub = document.getElementById("login-form-sub");
+    if (sub) {
+      sub.textContent =
+        role === "admin"
+          ? "Accédez au tableau de bord de gestion"
+          : "Réservez votre voiture en quelques clics";
+    }
+
+    const inscLink = document.getElementById("insc-link");
+    if (inscLink) inscLink.style.display = role === "client" ? "block" : "none";
+  }
+
+  function showChoose() {
+    const stepChoose = document.getElementById("step-choose");
+    const stepForm = document.getElementById("step-form");
+    const err = document.getElementById("login-error");
+    if (stepChoose) stepChoose.style.display = "block";
+    if (stepForm) stepForm.style.display = "none";
+    if (err) err.style.display = "none";
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    const email = document.getElementById("login-email")?.value.trim() || "";
+    const pwd = document.getElementById("login-pwd")?.value || "";
+    const err = document.getElementById("login-error");
+
+    const btn = event.target.querySelector('button[type="submit"]');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "Connexion…";
+    }
+
+    const user = await findUser(email);
+
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = "Se connecter →";
+    }
+
+    if (!user || user.password !== pwd) {
+      if (err) {
+        err.textContent = "Email ou mot de passe incorrect";
+        err.style.display = "block";
+      }
+      return;
+    }
+    if (currentRole === "admin" && user.role !== "admin") {
+      if (err) {
+        err.textContent = "Ce compte n'a pas les droits administrateur";
+        err.style.display = "block";
+      }
+      return;
+    }
+    if (currentRole === "client" && user.role !== "client") {
+      if (err) {
+        err.textContent = "Utilisez l'espace Administrateur pour ce compte";
+        err.style.display = "block";
+      }
+      return;
+    }
+
+    setSession(user);
+    showToast(`Bienvenue ${user.nom.split(" ")[0]} ✓`);
+    setTimeout(
+      () => navigate(user.role === "admin" ? "dashboard" : "accueil"),
+      900,
+    );
+  }
+
+  if (adminBtn) adminBtn.onclick = () => showForm("admin");
+  if (clientBtn) clientBtn.onclick = () => showForm("client");
+  if (backBtn) backBtn.onclick = showChoose;
+  if (loginForm) loginForm.onsubmit = handleSubmit;
+}
+
+export function afterRender() {
+  const themeBtns = document.querySelectorAll("#login-theme-btn, [data-theme-toggle]");
+  themeBtns.forEach(btn => {
+    btn.onclick = (e) => {
+      e.preventDefault();
+      toggleTheme();
+    };
+  });
+}

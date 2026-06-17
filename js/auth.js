@@ -3,7 +3,6 @@ import { setSession, getSession, clearSession } from './session.js';
 import { navigate } from './router.js';
 import { showToast } from './toast.js';
 
-
 let _currentRole = 'client';
 
 export function initConnexion() {
@@ -35,8 +34,8 @@ function showForm(role) {
     const sub = document.getElementById('login-form-sub');
     if (sub) {
         sub.textContent = role === 'admin'
-            ? 'Accédez au tableau de bord de gestion'
-            : 'Réservez votre voiture en quelques clics';
+            ? 'Accedez au tableau de bord de gestion'
+            : 'Reservez votre voiture en quelques clics';
     }
 
     const inscLink = document.getElementById('insc-link');
@@ -53,14 +52,25 @@ function showChoose() {
     if (err) err.style.display = 'none';
 }
 
-function handleLogin(event) {
+async function handleLogin(event) {
     event.preventDefault();
     
     const email = document.getElementById('login-email')?.value.trim() || '';
     const pwd = document.getElementById('login-pwd')?.value || '';
     const err = document.getElementById('login-error');
-    
-    const user = findUser(email);
+    const btn = event.target.querySelector('button[type="submit"]');
+
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Connexion…';
+    }
+
+    const user = await findUser(email);
+
+    if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Se connecter →';
+    }
 
     if (!user || user.password !== pwd) {
         if (err) {
@@ -69,6 +79,7 @@ function handleLogin(event) {
         }
         return;
     }
+    
     if (_currentRole === 'admin' && user.role !== 'admin') {
         if (err) {
             err.textContent = 'Ce compte n\'a pas les droits administrateur';
@@ -76,6 +87,7 @@ function handleLogin(event) {
         }
         return;
     }
+    
     if (_currentRole === 'client' && user.role !== 'client') {
         if (err) {
             err.textContent = 'Utilisez l\'espace Administrateur pour ce compte';
@@ -85,8 +97,14 @@ function handleLogin(event) {
     }
 
     setSession(user);
-    showToast(`Bienvenue ${user.nom.split(' ')[0]} ✓`);
-    setTimeout(() => navigate(user.role === 'admin' ? 'dashboard' : 'accueil'), 900);
+    showToast(`Bienvenue ${user.nom.split(' ')[0]} `);
+    setTimeout(() => {
+        if (user.role === 'admin') {
+            navigate('dashboard');
+        } else {
+            navigate('accueil');
+        }
+    }, 900);
 }
 
 export function initInscription() {
@@ -111,15 +129,15 @@ function checkPasswords() {
     }
     
     if (pwd === pwd2) {
-        hint.textContent = '✓ Les mots de passe correspondent';
+        hint.textContent = 'Les mots de passe correspondent';
         hint.className = 'pwd-hint pwd-hint--ok';
     } else {
-        hint.textContent = '✗ Les mots de passe ne correspondent pas';
+        hint.textContent = 'Les mots de passe ne correspondent pas';
         hint.className = 'pwd-hint pwd-hint--err';
     }
 }
 
-function handleInscription(event) {
+async function handleInscription(event) {
     event.preventDefault();
     
     const nom = document.getElementById('insc-nom')?.value.trim() || '';
@@ -128,6 +146,7 @@ function handleInscription(event) {
     const pwd = document.getElementById('insc-pwd')?.value || '';
     const pwd2 = document.getElementById('insc-pwd2')?.value || '';
     const err = document.getElementById('insc-error');
+    const btn = event.target.querySelector('button[type="submit"]');
 
     if (pwd !== pwd2) {
         if (err) {
@@ -136,17 +155,30 @@ function handleInscription(event) {
         }
         return;
     }
+    
     if (pwd.length < 6) {
         if (err) {
-            err.textContent = 'Mot de passe trop court (6 caractères minimum)';
+            err.textContent = 'Mot de passe trop court (6 caracteres minimum)';
             err.style.display = 'block';
         }
         return;
     }
     
-    if (findUser(email)) {
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Verification…';
+    }
+    
+    const existing = await findUser(email);
+    
+    if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Creer mon compte →';
+    }
+    
+    if (existing) {
         if (err) {
-            err.textContent = 'Un compte existe déjà avec cet email';
+            err.textContent = 'Un compte existe deja avec cet email';
             err.style.display = 'block';
         }
         return;
@@ -162,40 +194,61 @@ function handleInscription(event) {
         createdAt: new Date().toISOString().split('T')[0],
     };
     
-    addUser(newUser);
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Creation…';
+    }
+    
+    await addUser(newUser);
+    
     setSession(newUser);
     showToast(`Bienvenue ${nom.split(' ')[0]} ! `);
     setTimeout(() => navigate('accueil'), 1200);
 }
 
-export function initDashboard() {
-    
+export async function initDashboard() {
     const logoutBtn = document.getElementById('db-logout-btn');
     if (logoutBtn) {
         logoutBtn.onclick = () => {
-            clearSession();
-            showToast('Déconnexion réussie');
-            setTimeout(() => navigate('accueil'), 800);
+            if (confirm('Voulez-vous vous deconnecter ?')) {
+                clearSession();
+                showToast('Deconnexion reussie');
+                setTimeout(() => {
+                    window.location.hash = 'accueil';
+                    window.location.reload();
+                }, 500);
+            }
         };
     }
 
     const dateEl = document.getElementById('db-date');
     if (dateEl) {
         dateEl.textContent = new Date().toLocaleDateString('fr-FR', {
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
         });
     }
 
     const session = getSession();
     if (session) {
-        const initiales = session.nom.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+        const initiales = session.nom
+            .split(' ')
+            .map(n => n[0])
+            .join('')
+            .slice(0, 2)
+            .toUpperCase();
+        
         const avatarEl = document.getElementById('db-avatar');
         const nameEl = document.getElementById('db-username');
+        
         if (avatarEl) avatarEl.textContent = initiales;
         if (nameEl) nameEl.textContent = session.nom;
     }
 
-    const clients = getUsers().filter(u => u.role === 'client');
+    const users = await getUsers();
+    const clients = users.filter(u => u.role === 'client');
     const tbody = document.getElementById('db-clients-body');
     const countEl = document.getElementById('db-client-count');
     
@@ -205,7 +258,7 @@ export function initDashboard() {
     
     if (tbody) {
         if (clients.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:28px">Aucun client inscrit</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--txt-faint)">Aucun client inscrit</td></tr>';
         } else {
             tbody.innerHTML = clients.map(u => `
                 <tr>
@@ -223,8 +276,11 @@ export function initDashboard() {
 
 export function logout() {
     clearSession();
-    showToast('Déconnexion réussie');
-    setTimeout(() => navigate('accueil'), 800);
+    showToast('Deconnexion reussie');
+    setTimeout(() => {
+        window.location.hash = 'accueil';
+        window.location.reload();
+    }, 500);
 }
 
 if (typeof window !== 'undefined') {

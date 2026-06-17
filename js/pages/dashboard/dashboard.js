@@ -1,4 +1,10 @@
-export const dashboardPage = `
+import { getSession, clearSession } from "../../session.js";
+import { showToast } from "../../toast.js";
+import { getUsers, getReservations, getVehicles, getDrivers, getIncidents,addVehicle, updateVehicle, deleteVehicle,addDriver, updateDriver, deleteDriver,addIncident, updateIncident, deleteIncident } from "../../db.js";
+import { navigate } from "../../router.js";
+
+export function render() {
+  return `
 <div class="dashboard">
   <aside class="db-sidebar">
     <div class="db-sidebar-header">
@@ -29,15 +35,14 @@ export const dashboardPage = `
       </button>
       <button class="db-nav-item" data-section="itineraires">
         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512"><path d="M0 0h512v512H0z" fill="none"/><path fill="#808080" d="M48.17 113.34A32 32 0 0 0 32 141.24V438a32 32 0 0 0 47 28.37c.43-.23.85-.47 1.26-.74l84.14-55.05a8 8 0 0 0 3.63-6.72V46.45a8 8 0 0 0-12.51-6.63Zm164.19-74.03A8 8 0 0 0 200 46v357.56a8 8 0 0 0 3.63 6.72l96 62.42A8 8 0 0 0 312 466V108.67a8 8 0 0 0-3.64-6.73Zm252.17 7.16a31.64 31.64 0 0 0-31.5-.88a12 12 0 0 0-1.25.74l-84.15 55a8 8 0 0 0-3.63 6.72v357.46a8 8 0 0 0 12.52 6.63l107.07-73.46a32 32 0 0 0 16.41-28v-296a32.76 32.76 0 0 0-15.47-28.21"/></svg>
-        &nbsp; 
-        <a href="#carte"   class="nav-link">Itinéraires</a>
+        &nbsp; Itinéraires
       </button>
       <button class="db-nav-item" data-section="incidents">
         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 2048 2048"><path d="M0 0h2048v2048H0z" fill="none"/><path fill="#808080" d="M1920 2048H0L960 128zm-896-384H896v128h128zm0-128V896H896v640z"/></svg>
         &nbsp; Incidents
       </button>
       <button class="db-nav-item" data-section="paiements">
-        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 56 56"><path d="M0 0h56v56H0z" fill="none"/><path fill="#808080" d="M2.266 17.734h51.468v-2.18c0-4.827-2.46-7.265-7.359-7.265H9.625c-4.898 0-7.36 2.438-7.36 7.266Zm0 22.735c0 4.828 2.46 7.242 7.359 7.242h36.75c4.898 0 7.36-2.414 7.36-7.242V23.055H2.264Zm7.828-5.719v-4.336c0-1.312.914-2.25 2.297-2.25h5.742c1.383 0 2.297.938 2.297 2.25v4.336c0 1.336-.914 2.25-2.297 2.25H12.39c-1.383 0-2.297-.914-2.297-2.25"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 56 56"><path d="M0 0h56v56H0z" fill="none"/><path fill="#808080" d="M2.266 17.734h51.468v-2.18c0-4.827-2.46-7.265-7.359-7.265H9.625c-4.898 0-7.36 2.438-7.36 7.266Zm0 22.735c0 4.828 2.46 7.242 7.359 7.242h36.75c4.898 0 7.36-2.414 7.36-7.242V23.055H2.264zm7.828-5.719v-4.336c0-1.312.914-2.25 2.297-2.25h5.742c1.383 0 2.297.938 2.297 2.25v4.336c0 1.336-.914 2.25-2.297 2.25H12.39c-1.383 0-2.297-.914-2.297-2.25"/></svg>
         &nbsp; Paiements
       </button>
       <button class="db-nav-item" data-section="rapports">
@@ -53,7 +58,7 @@ export const dashboardPage = `
           <div class="db-user-name" id="db-username">Admin</div>
           <div class="db-user-role">Super Administrateur</div>
         </div>
-        <button onclick="NiouDeem.logout()" id="db-logout-btn" title="Déconnexion">
+        <button id="db-logout-btn" title="Déconnexion">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Sortir
         </button>
@@ -353,4 +358,483 @@ export const dashboardPage = `
 .db-section { display:none; }
 .db-section.active { display:block; }
 </style>
-`;
+  `;
+}
+
+export async function init() {
+  const dateEl = document.getElementById("db-date");
+  const session = getSession();
+
+  if (dateEl) {
+    dateEl.textContent = new Date().toLocaleDateString("fr-FR", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
+
+  if (session) {
+    const initiales = session.nom
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+    const avatarEl = document.getElementById("db-avatar");
+    const nameEl = document.getElementById("db-username");
+    if (avatarEl) avatarEl.textContent = initiales;
+    if (nameEl) nameEl.textContent = session.nom;
+  }
+
+  const titles = {
+    tableau: "Tableau de bord",
+    reservations: "Réservations",
+    flotte: "Flotte",
+    chauffeurs: "Chauffeurs",
+    clients: "Clients",
+    itineraires: "Itinéraires",
+    incidents: "Incidents",
+    paiements: "Paiements",
+    rapports: "Rapports",
+  };
+
+  document.querySelectorAll('.db-nav-item[data-section]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const section = btn.dataset.section;
+      document.querySelectorAll('.db-nav-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.db-section').forEach(s => s.classList.remove('active'));
+      document.getElementById('section-' + section)?.classList.add('active');
+      const titleEl = document.getElementById('db-section-title');
+      if (titleEl) titleEl.textContent = titles[section] || section;
+    });
+  });
+
+  const money = (value) => (Number(value) || 0).toLocaleString('fr-FR') + ' F';
+  const shortMoney = (value) => {
+    const amount = Number(value) || 0;
+    if (amount >= 1000000) return (amount / 1000000).toFixed(amount >= 10000000 ? 0 : 1) + 'M';
+    if (amount >= 1000) return Math.round(amount / 1000) + 'K';
+    return String(amount);
+  };
+  const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;',
+  }[char]));
+  const badgeClass = (status) => ({
+    'Disponible': 'badge-green',
+    'En service': 'badge-green',
+    'Confirmé': 'badge-green',
+    'Résolu': 'badge-green',
+    'Planifié': 'badge-yellow',
+    'En traitement': 'badge-yellow',
+    'En maintenance': 'badge-yellow',
+    'Réservé': 'badge-red',
+    'Ouvert': 'badge-red',
+    'Hors service': 'badge-red',
+    'Annulé': 'badge-red',
+    'Congé': 'badge-gray',
+    'Suspendu': 'badge-red',
+  }[status] || 'badge-blue');
+
+  function makeId(prefix) {
+    return `${prefix}-${Date.now().toString().slice(-6)}`;
+  }
+
+  async function refreshDashboard() {
+    const [users, reservations, vehicles, drivers, incidents] = await Promise.all([
+      getUsers(),
+      getReservations(),
+      getVehicles(),
+      getDrivers(),
+      getIncidents(),
+    ]);
+
+    renderReservationsTable(reservations);
+    renderVehicles(vehicles);
+    renderDrivers(drivers);
+    renderIncidents(incidents);
+    renderPayments(reservations);
+    renderReports({ users, reservations, vehicles, drivers, incidents });
+    updateKpis({ reservations, vehicles, incidents });
+    await loadClients();
+  }
+
+  function renderReservationsTable(reservations) {
+    const rows = reservations.length === 0
+      ? '<tr><td colspan="8" class="muted" style="text-align:center;padding:24px">Aucune réservation</td></tr>'
+      : reservations.map(r => `
+          <tr>
+            <td class="yellow">${esc(r.id)}</td>
+            <td style="font-weight:600">${esc(r.clientNom)}</td>
+            <td class="muted">${esc(r.chauffeur || '—')}</td>
+            <td class="muted">${esc(r.vehicule || '—')}</td>
+            <td><div>${esc(r.depart)}</div><div class="muted" style="font-size:11px">→ ${esc(r.destination)}</div></td>
+            <td class="muted">${esc(r.heure || '—')} · ${esc(r.duree || '—')}h</td>
+            <td><span class="badge ${badgeClass(r.statut)}">${esc(r.statut || 'Planifié')}</span></td>
+            <td style="font-weight:700">${money(r.montant)}</td>
+          </tr>
+        `).join('');
+
+    const countEl = document.getElementById('db-res-count');
+    if (countEl) countEl.textContent = reservations.length + ' réservation' + (reservations.length > 1 ? 's' : '');
+    ['db-res-body', 'db-res-body-home'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = rows;
+    });
+  }
+
+  function renderVehicles(vehicles) {
+    const body = document.getElementById('db-vehicles-body');
+    if (!body) return;
+    body.innerHTML = vehicles.length === 0
+      ? '<tr><td colspan="7" class="muted" style="text-align:center;padding:24px">Aucun véhicule</td></tr>'
+      : vehicles.map(v => `
+          <tr>
+            <td class="yellow">${esc(v.id)}</td>
+            <td style="font-weight:600">${esc(v.modele)}</td>
+            <td class="muted">${esc(v.categorie)}</td>
+            <td class="muted">${esc(v.places)}</td>
+            <td><span class="badge ${badgeClass(v.statut)}">${esc(v.statut)}</span></td>
+            <td style="font-weight:700;color:var(--yellow)">${money(v.prixHeure)}</td>
+            <td>
+              <button class="btn-outline db-action-btn" data-action="edit-vehicle" data-id="${esc(v.id)}">Modifier</button>
+              <button class="btn-outline db-action-btn danger" data-action="delete-vehicle" data-id="${esc(v.id)}">Supprimer</button>
+            </td>
+          </tr>
+        `).join('');
+  }
+
+  function renderDrivers(drivers) {
+    const body = document.getElementById('db-drivers-body');
+    if (!body) return;
+    body.innerHTML = drivers.length === 0
+      ? '<tr><td colspan="8" class="muted" style="text-align:center;padding:24px">Aucun chauffeur</td></tr>'
+      : drivers.map(d => {
+          const initials = esc(d.nom).split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+          return `
+            <tr>
+              <td class="yellow">${esc(d.id)}</td>
+              <td><div style="display:flex;align-items:center;gap:8px"><div class="db-mini-avatar">${initials}</div>${esc(d.nom)}</div></td>
+              <td class="muted">${esc(d.telephone)}</td>
+              <td class="muted">${esc(d.vehicule)}</td>
+              <td><span class="badge ${badgeClass(d.statut)}">${esc(d.statut)}</span></td>
+              <td style="color:var(--yellow);font-weight:700">${esc(d.note)} ★</td>
+              <td class="muted">${esc(d.trajets)}</td>
+              <td>
+                <button class="btn-outline db-action-btn" data-action="edit-driver" data-id="${esc(d.id)}">Modifier</button>
+                <button class="btn-outline db-action-btn danger" data-action="delete-driver" data-id="${esc(d.id)}">Supprimer</button>
+              </td>
+            </tr>`;
+        }).join('');
+  }
+
+  function incidentCard(i, withActions = true) {
+    const icon = i.type === 'Panne' ? '🔧' : i.type === 'Accident' ? '⚠️' : '!';
+    return `
+      <div class="db-list-row">
+        <div class="db-list-icon">${icon}</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px;color:var(--txt-main)">${esc(i.titre)}</div>
+          <div style="color:var(--txt-sub);font-size:12px">${esc(i.vehicule)} · ${esc(i.chauffeur)} · ${esc(i.date)} · ${esc(i.priorite)}</div>
+          ${i.description ? `<div style="color:var(--txt-faint);font-size:12px;margin-top:4px">${esc(i.description)}</div>` : ''}
+        </div>
+        <span class="badge ${badgeClass(i.statut)}">${esc(i.statut)}</span>
+        ${withActions ? `
+          <button class="btn-outline db-action-btn" data-action="edit-incident" data-id="${esc(i.id)}">Gérer</button>
+          <button class="btn-outline db-action-btn danger" data-action="delete-incident" data-id="${esc(i.id)}">Supprimer</button>
+        ` : ''}
+      </div>`;
+  }
+
+  function renderIncidents(incidents) {
+    const list = document.getElementById('db-incidents-list');
+    const recent = document.getElementById('db-incidents-recent');
+    const content = incidents.length === 0
+      ? '<div class="muted" style="padding:20px">Aucun incident enregistré</div>'
+      : incidents.map(i => incidentCard(i)).join('');
+    if (list) list.innerHTML = content;
+    if (recent) recent.innerHTML = incidents.slice(0, 3).map(i => incidentCard(i, false)).join('') || '<div class="muted" style="padding:20px">Aucun incident récent</div>';
+  }
+
+  function renderPayments(reservations) {
+    const list = document.getElementById('db-payments-list');
+    if (!list) return;
+    list.innerHTML = reservations.length === 0
+      ? '<div class="muted" style="padding:20px">Aucun paiement</div>'
+      : reservations.map((r, index) => `
+          <div class="db-list-row">
+            <div class="db-list-icon">💳</div>
+            <div style="flex:1">
+              <div style="font-weight:700;font-size:14px;color:var(--txt-main)">${esc(r.clientNom)}</div>
+              <div style="color:var(--txt-sub);font-size:12px">PAY-${String(index + 1).padStart(3, '0')} · ${esc(r.paiement || 'Non renseigné')} · ${esc((r.createdAt || '').slice(0, 10) || r.date || '—')}</div>
+            </div>
+            <div style="font-weight:800;color:var(--txt-main)">${money(r.montant)}</div>
+            <span class="badge ${badgeClass(r.statut === 'Annulé' ? 'Annulé' : 'Confirmé')}">${r.statut === 'Annulé' ? 'Annulé' : 'Confirmé'}</span>
+          </div>
+        `).join('');
+  }
+
+  function renderReports({ users, reservations, vehicles, drivers, incidents }) {
+    const wrap = document.getElementById('db-reports-content');
+    if (!wrap) return;
+    const clients = users.filter(u => u.role === 'client');
+    const revenue = reservations.reduce((sum, r) => sum + (Number(r.montant) || 0), 0);
+    const avgNote = drivers.length
+      ? (drivers.reduce((sum, d) => sum + (Number(d.note) || 0), 0) / drivers.length).toFixed(1)
+      : '0.0';
+    const vehicleCounts = reservations.reduce((acc, r) => {
+      const key = r.vehicule || 'Non renseigné';
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+    const topVehicles = Object.entries(vehicleCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
+    const maxCount = Math.max(1, ...topVehicles.map(([, count]) => count));
+
+    wrap.innerHTML = `
+      <div class="db-report-grid">
+        <div class="db-report-card"><div>REVENUS TOTAL</div><strong>${shortMoney(revenue)} <span>FCFA</span></strong><small>${reservations.length} paiement(s)</small></div>
+        <div class="db-report-card"><div>TRAJETS ENREGISTRÉS</div><strong>${reservations.length}</strong><small>${drivers.length} chauffeur(s)</small></div>
+        <div class="db-report-card"><div>NOTE MOYENNE</div><strong>${avgNote}/5</strong><small>Basé sur les chauffeurs</small></div>
+        <div class="db-report-card"><div>CLIENTS / INCIDENTS</div><strong>${clients.length} / ${incidents.length}</strong><small>${vehicles.length} véhicule(s) en flotte</small></div>
+      </div>
+      <div class="db-report-bars">
+        <div style="font-size:14px;font-weight:700;color:var(--txt-main);margin-bottom:12px">Top véhicules par réservation</div>
+        ${topVehicles.length === 0 ? '<div class="muted">Aucune réservation à analyser</div>' : topVehicles.map(([label, count]) => `
+          <div class="db-bar-row">
+            <div>${esc(label)}</div>
+            <span><i style="width:${(count / maxCount) * 100}%"></i></span>
+            <strong>${count}</strong>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  function updateKpis({ reservations, vehicles, incidents }) {
+    const activeReservations = reservations.filter(r => !['Terminé', 'Annulé'].includes(r.statut)).length;
+    const vehiclesAvailable = vehicles.filter(v => ['Disponible', 'En service'].includes(v.statut)).length;
+    const revenue = reservations.reduce((sum, r) => sum + (Number(r.montant) || 0), 0);
+    const openIncidents = incidents.filter(i => i.statut !== 'Résolu').length;
+    const set = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+    set('kpi-active-res', activeReservations);
+    set('kpi-vehicles', `${vehiclesAvailable}/${vehicles.length}`);
+    set('kpi-revenue', shortMoney(revenue));
+    set('kpi-incidents', openIncidents);
+  }
+
+  async function loadClients() {
+    const users = await getUsers();
+    const clients = users.filter((u) => u.role === "client");
+
+    const rows = clients.length === 0
+      ? '<tr><td colspan="6" class="muted" style="text-align:center;padding:24px">Aucun client inscrit</td></tr>'
+      : clients.map((c) => `
+          <tr>
+            <td class="yellow">${c.id}</td>
+            <td style="font-weight:600">${c.nom}</td>
+            <td class="muted">${c.email}</td>
+            <td class="muted">${c.telephone || "—"}</td>
+            <td><span class="badge badge-blue">Client</span></td>
+            <td class="muted">${c.createdAt || "—"}</td>
+          </tr>
+        `).join("");
+
+    const count = `${clients.length} compte${clients.length > 1 ? "s" : ""}`;
+                
+    const body1 = document.getElementById("db-clients-body");
+    const count1 = document.getElementById("db-client-count");
+    if (body1) body1.innerHTML = rows;
+    if (count1) count1.textContent = count;
+
+    const body2 = document.getElementById("db-clients-body2");
+    const count2 = document.getElementById("db-client-count2");
+    if (body2) body2.innerHTML = rows;
+    if (count2) count2.textContent = count;
+  }
+
+  function showForm(id, show = true) {
+    const form = document.getElementById(id);
+    if (form) form.style.display = show ? 'grid' : 'none';
+  }
+
+  function resetVehicleForm() {
+    document.getElementById('vehicle-form')?.reset();
+    document.getElementById('vehicle-id').value = '';
+  }
+
+  function resetDriverForm() {
+    document.getElementById('driver-form')?.reset();
+    document.getElementById('driver-id').value = '';
+  }
+
+  function resetIncidentForm() {
+    document.getElementById('incident-form')?.reset();
+    document.getElementById('incident-id').value = '';
+    const dateInput = document.getElementById('incident-date');
+    if (dateInput) dateInput.value = new Date().toISOString().slice(0, 10);
+  }
+
+  function bindDashboardForms() {
+    document.getElementById('btn-add-vehicle')?.addEventListener('click', () => {
+      resetVehicleForm();
+      showForm('vehicle-form');
+    });
+    document.getElementById('cancel-vehicle')?.addEventListener('click', () => showForm('vehicle-form', false));
+    document.getElementById('vehicle-form')?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const id = document.getElementById('vehicle-id').value;
+      const payload = {
+        modele: document.getElementById('vehicle-modele').value.trim(),
+        categorie: document.getElementById('vehicle-categorie').value.trim(),
+        places: Number(document.getElementById('vehicle-places').value),
+        statut: document.getElementById('vehicle-statut').value,
+        prixHeure: Number(document.getElementById('vehicle-prix').value),
+      };
+      if (id) await updateVehicle(id, payload);
+      else await addVehicle({ id: makeId('VEH'), ...payload });
+      showToast(id ? 'Véhicule modifié' : 'Véhicule ajouté');
+      showForm('vehicle-form', false);
+      await refreshDashboard();
+    });
+
+    document.getElementById('btn-add-driver')?.addEventListener('click', () => {
+      resetDriverForm();
+      showForm('driver-form');
+    });
+    document.getElementById('cancel-driver')?.addEventListener('click', () => showForm('driver-form', false));
+    document.getElementById('driver-form')?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const id = document.getElementById('driver-id').value;
+      const payload = {
+        nom: document.getElementById('driver-nom').value.trim(),
+        telephone: document.getElementById('driver-telephone').value.trim(),
+        vehicule: document.getElementById('driver-vehicule').value.trim(),
+        statut: document.getElementById('driver-statut').value,
+        note: Number(document.getElementById('driver-note').value),
+        trajets: Number(document.getElementById('driver-trajets').value),
+      };
+      if (id) await updateDriver(id, payload);
+      else await addDriver({ id: makeId('CHF'), ...payload });
+      showToast(id ? 'Chauffeur modifié' : 'Chauffeur ajouté');
+      showForm('driver-form', false);
+      await refreshDashboard();
+    });
+
+    document.getElementById('btn-add-incident')?.addEventListener('click', () => {
+      resetIncidentForm();
+      showForm('incident-form');
+    });
+    document.getElementById('cancel-incident')?.addEventListener('click', () => showForm('incident-form', false));
+    document.getElementById('incident-form')?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const id = document.getElementById('incident-id').value;
+      const payload = {
+        titre: document.getElementById('incident-titre').value.trim(),
+        type: document.getElementById('incident-type').value,
+        vehicule: document.getElementById('incident-vehicule').value.trim(),
+        chauffeur: document.getElementById('incident-chauffeur').value.trim(),
+        date: document.getElementById('incident-date').value,
+        statut: document.getElementById('incident-statut').value,
+        priorite: document.getElementById('incident-priorite').value,
+        description: document.getElementById('incident-description').value.trim(),
+      };
+      if (id) await updateIncident(id, payload);
+      else await addIncident({ id: makeId('INC'), ...payload });
+      showToast(id ? 'Incident modifié' : 'Incident signalé');
+      showForm('incident-form', false);
+      await refreshDashboard();
+    });
+
+    document.getElementById('section-flotte')?.addEventListener('click', async (event) => {
+      const btn = event.target.closest('[data-action]');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      if (btn.dataset.action === 'delete-vehicle') {
+        if (confirm('Supprimer ce véhicule ?')) {
+          await deleteVehicle(id);
+          showToast('Véhicule supprimé');
+          await refreshDashboard();
+        }
+        return;
+      }
+      const vehicle = (await getVehicles()).find(v => v.id === id);
+      if (!vehicle) return;
+      document.getElementById('vehicle-id').value = vehicle.id;
+      document.getElementById('vehicle-modele').value = vehicle.modele;
+      document.getElementById('vehicle-categorie').value = vehicle.categorie;
+      document.getElementById('vehicle-places').value = vehicle.places;
+      document.getElementById('vehicle-statut').value = vehicle.statut;
+      document.getElementById('vehicle-prix').value = vehicle.prixHeure;
+      showForm('vehicle-form');
+    });
+
+    document.getElementById('section-chauffeurs')?.addEventListener('click', async (event) => {
+      const btn = event.target.closest('[data-action]');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      if (btn.dataset.action === 'delete-driver') {
+        if (confirm('Supprimer ce chauffeur ?')) {
+          await deleteDriver(id);
+          showToast('Chauffeur supprimé');
+          await refreshDashboard();
+        }
+        return;
+      }
+      const driver = (await getDrivers()).find(d => d.id === id);
+      if (!driver) return;
+      document.getElementById('driver-id').value = driver.id;
+      document.getElementById('driver-nom').value = driver.nom;
+      document.getElementById('driver-telephone').value = driver.telephone;
+      document.getElementById('driver-vehicule').value = driver.vehicule;
+      document.getElementById('driver-statut').value = driver.statut;
+      document.getElementById('driver-note').value = driver.note;
+      document.getElementById('driver-trajets').value = driver.trajets;
+      showForm('driver-form');
+    });
+
+    document.getElementById('section-incidents')?.addEventListener('click', async (event) => {
+      const btn = event.target.closest('[data-action]');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      if (btn.dataset.action === 'delete-incident') {
+        if (confirm('Supprimer cet incident ?')) {
+          await deleteIncident(id);
+          showToast('Incident supprimé');
+          await refreshDashboard();
+        }
+        return;
+      }
+      const incident = (await getIncidents()).find(i => i.id === id);
+      if (!incident) return;
+      document.getElementById('incident-id').value = incident.id;
+      document.getElementById('incident-titre').value = incident.titre;
+      document.getElementById('incident-type').value = incident.type;
+      document.getElementById('incident-vehicule').value = incident.vehicule;
+      document.getElementById('incident-chauffeur').value = incident.chauffeur;
+      document.getElementById('incident-date').value = incident.date;
+      document.getElementById('incident-statut').value = incident.statut;
+      document.getElementById('incident-priorite').value = incident.priorite;
+      document.getElementById('incident-description').value = incident.description || '';
+      showForm('incident-form');
+    });
+  }
+
+  const logoutBtn = document.getElementById("db-logout-btn");
+  if (logoutBtn) {
+    logoutBtn.onclick = () => {
+      clearSession();
+      showToast("Déconnexion réussie");
+      setTimeout(() => navigate("accueil"), 800);
+    };
+  }
+
+  bindDashboardForms();
+  await refreshDashboard();
+}

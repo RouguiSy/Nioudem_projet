@@ -19,3 +19,4 @@ export function ${PAGE_NAME}() {
 EOF
 
 echo " Page créée : $JS_FILE"
+

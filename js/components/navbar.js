@@ -1,6 +1,6 @@
-
 import { getThemeIcon } from '../theme.js';
-import { getSession }   from '../session.js';
+import { getSession, clearSession } from '../session.js';
+import { showToast } from '../toast.js';
 
 const LOGO_SVG = `
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -23,12 +23,35 @@ export function renderNavbar(activePage = 'accueil') {
     <a href="#${hash}" class="nav-link ${activePage === hash ? 'active' : ''}">${label}</a>
   `).join('');
 
-  const userSection = session
-    ? `<div class="nav-user-pill" onclick="ND.navigate('dashboard')" style="cursor:pointer">
-          <div class="nav-user-avatar">${session.nom.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase()}</div>
-          <span class="nav-user-name">${session.nom.split(' ')[0]}</span>
-        </div>`
-    : `<a href="#connexion" class="btn-outline">Connexion</a>`;
+  let userSection = '';
+  
+  if (session) {
+    const initials = session.nom
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase();
+    
+    const firstName = session.nom.split(' ')[0];
+    const isAdmin = session.role === 'admin';
+    
+
+    const clickAction = isAdmin 
+      ? "ND.navigate('dashboard')" 
+      : "ND.logout()";
+    
+    const label = isAdmin ? '' : '<span style="font-size:9px;color:var(--txt-faint);margin-left:4px;"></span>';
+    
+    userSection = `
+      <div class="nav-user-pill" onclick="${clickAction}" style="cursor:pointer">
+        <div class="nav-user-avatar">${initials}</div>
+        <span class="nav-user-name">${firstName} ${label}</span>
+      </div>
+    `;
+  } else {
+    userSection = `<a href="#connexion" class="btn-outline">Connexion</a>`;
+  }
 
   return `
     <nav class="navbar">

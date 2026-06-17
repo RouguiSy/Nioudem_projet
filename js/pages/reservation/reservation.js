@@ -1,4 +1,10 @@
-export const reservationPage = `
+import { getSession } from "../../session.js";
+import { showToast } from "../../toast.js";
+import { addReservation } from "../../db.js";
+import { navigate } from "../../router.js";
+
+export function render() {
+  return `
 <nav class="navbar">
   <a href="#accueil" class="logo">
     <div class="logo-icon">
@@ -395,4 +401,164 @@ export const reservationPage = `
 
 .yellow { color:var(--yellow); }
 </style>
-`;
+  `;
+}
+
+export async function init() {
+  const session = getSession();
+
+  const state = {
+    etape: 1,
+    depart: '',
+    destination: '',
+    date: '',
+    heure: '',
+    duree: 1,
+    vehicule: '',
+    prixHeure: 0,
+    chauffeur: '',
+    nom: session?.nom || '',
+    tel: session?.telephone || '',
+    notes: '',
+    paiement: '',
+  };
+
+  function goTo(n) {
+    document.querySelectorAll('.res-screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + n)?.classList.add('active');
+    document.querySelectorAll('.res-step').forEach(s => {
+      const sn = parseInt(s.dataset.step);
+      s.classList.remove('active', 'done');
+      if (sn === n) s.classList.add('active');
+      if (sn < n)  s.classList.add('done');
+    });
+    state.etape = n;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function calcTotal() { return state.prixHeure * state.duree; }
+  function formatTotal() { return calcTotal().toLocaleString('fr-FR') + ' FCFA'; }
+
+  const nomInput = document.getElementById('res-nom');
+  const telInput = document.getElementById('res-tel');
+  if (nomInput && session?.nom)       nomInput.value = session.nom;
+  if (telInput && session?.telephone) telInput.value = session.telephone;
+
+  // ── Étape 1 ──
+  document.querySelectorAll('.duree-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.duree-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.duree = parseInt(btn.dataset.duree);
+    });
+  });
+
+  document.getElementById('next-1')?.addEventListener('click', () => {
+    const depart      = document.getElementById('res-depart')?.value;
+    const destination = document.getElementById('res-destination')?.value;
+    const date        = document.getElementById('res-date')?.value;
+    const heure       = document.getElementById('res-heure')?.value;
+    if (!depart || !destination || !date || !heure) {
+      showToast('Veuillez remplir tous les champs'); return;
+    }
+    if (depart === destination) {
+      showToast('Le départ et la destination doivent être différents'); return;
+    }
+    state.depart = depart; state.destination = destination;
+    state.date = date; state.heure = heure;
+    goTo(2);
+  });
+
+  document.querySelectorAll('.vehicule-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.vehicule-item').forEach(v => v.classList.remove('selected'));
+      item.classList.add('selected');
+      state.vehicule  = item.dataset.vehicule;
+      state.prixHeure = parseInt(item.dataset.prix);
+    });
+  });
+
+  document.querySelectorAll('.chauffeur-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.chauffeur-item').forEach(c => c.classList.remove('selected'));
+      item.classList.add('selected');
+      state.chauffeur = item.dataset.chauffeur;
+    });
+  });
+
+  document.getElementById('prev-2')?.addEventListener('click', () => goTo(1));
+  document.getElementById('next-2')?.addEventListener('click', () => {
+    if (!state.vehicule)  { showToast('Choisissez un véhicule');  return; }
+    if (!state.chauffeur) { showToast('Choisissez un chauffeur'); return; }
+    goTo(3);
+    const dateStr = state.date
+      ? new Date(state.date).toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' })
+      : '—';
+    document.getElementById('recap-trajet').textContent    = state.depart + ' → ' + state.destination;
+    document.getElementById('recap-date').textContent      = dateStr + ' à ' + state.heure;
+    document.getElementById('recap-duree').textContent     = state.duree + 'h';
+    document.getElementById('recap-vehicule').textContent  = state.vehicule;
+    document.getElementById('recap-chauffeur').textContent = state.chauffeur;
+    document.getElementById('recap-total').textContent     = formatTotal();
+  });
+
+  document.getElementById('prev-3')?.addEventListener('click', () => goTo(2));
+  document.getElementById('next-3')?.addEventListener('click', () => {
+    const nom = document.getElementById('res-nom')?.value.trim();
+    const tel = document.getElementById('res-tel')?.value.trim();
+    if (!nom || !tel) { showToast('Nom et téléphone requis'); return; }
+    state.nom   = nom;
+    state.tel   = tel;
+    state.notes = document.getElementById('res-notes')?.value.trim() || '';
+    goTo(4);
+    document.getElementById('total-final').textContent = calcTotal().toLocaleString('fr-FR');
+    document.getElementById('total-detail').textContent =
+      '• ' + state.duree + 'h • ' + state.vehicule + ' • ' + state.chauffeur;
+  });
+
+  document.querySelectorAll('.paiement-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.paiement-item').forEach(p => p.classList.remove('selected'));
+      item.classList.add('selected');
+      state.paiement = item.dataset.paiement;
+    });
+  });
+
+  document.getElementById('prev-4')?.addEventListener('click', () => goTo(3));
+
+  document.getElementById('btn-confirmer')?.addEventListener('click', async () => {
+    if (!state.paiement) { showToast('Choisissez un mode de paiement'); return; }
+
+    const btn = document.getElementById('btn-confirmer');
+    if (btn) { btn.disabled = true; btn.textContent = 'Enregistrement…'; }
+
+    const reservation = {
+      id         : 'RES-' + Date.now(),
+      clientId   : session?.id || '',
+      clientNom  : state.nom,
+      clientTel  : state.tel,
+      depart     : state.depart,
+      destination: state.destination,
+      date       : state.date,
+      heure      : state.heure,
+      duree      : state.duree,
+      vehicule   : state.vehicule,
+      chauffeur  : state.chauffeur,
+      paiement   : state.paiement,
+      montant    : calcTotal(),
+      statut     : 'Planifié',
+      notes      : state.notes,
+      createdAt  : new Date().toISOString(),
+    };
+
+    try {
+      await addReservation(reservation);
+      showToast('Réservation confirmée ! ✓');
+      setTimeout(() => navigate('accueil'), 1500);
+    } catch (err) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Confirmer la réservation →'; }
+      showToast('Erreur lors de l\'enregistrement');
+      console.error(err);
+    }
+  });
+}
